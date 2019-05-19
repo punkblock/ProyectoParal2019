@@ -20,4 +20,4 @@ Para compilar y ejecutar el proyecto hay que pararse en la carpeta Tarea05-Paral
         $ g++ main.cpp -o tarea -std=c++14 -Ixlnt/include -lxlnt
         
         Ejecutar con:
-        $./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx)
+        $./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx

@@ -77,7 +77,7 @@ int main( int argc, char *argv[])
 	// Recorremos el vector y lo mostramos por pantalla
 
 
-	int contador_bloques = 0;
+    int contador_bloques = 0;
     int existe = 0;
     string nombre;
     int idNumero = 0;

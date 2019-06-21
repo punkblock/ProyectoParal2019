@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <string.h>
+#include <iostream>
+#include <xlnt/xlnt.hpp>
+#include "xlsxwriter.h"
+
+using namespace std;
+
+//Se devine variable global con arreglo de salas lleno
+string edificio_y_numSala[500];
+
+void leer(){
+    xlnt::workbook wb;
+    wb.load("/home/charls/libxlsxwriter/Salas.xlsx");
+    auto ws = wb.active_sheet();
+
+    /* Lee toda la hoja de cálculo */
+  	vector<vector<string>> hoja_calculo;
+  	vector<vector<string>> columna_c;
+    for (auto row : ws.rows(false)){
+        vector<string> fila_simple; // Creando un vector nuevo solo para esta fila en la hoja de cálculo
+  		    for (auto cell : row){
+  		        fila_simple.push_back(cell.to_string());  //Añadiendo esta celda a la fila;
+  		    }
+  		    hoja_calculo.push_back(fila_simple); //Agregando esta fila completa al vector que almacena toda la hoja de cálculo;
+      }
+
+       // Definimos variables y vectores a utilizar
+       string nombre_edificio; // Nombre del edificio
+       int numero_sala = 0;
+       string nombreNumero;
+       int numeros[500];
+       string nombree;
+       string nombre_llenado[500];
+       string numeros_salas[500];
+
+      // Primer For para recorrer el archivo completo
+      for (int fila = 1; fila < hoja_calculo.size(); fila++){
+          nombre_edificio = hoja_calculo.at(fila).at(0); // Se guarda nombre el edificio
+          nombreNumero = hoja_calculo.at(fila).at(1); // Se guarda el numero de salas
+          numero_sala = stoi(nombreNumero, nullptr); // Se Convierte de string a entero
+          numeros_salas[fila] = nombreNumero; // LLenamos vector con numero de salas
+          nombre_llenado[fila] = nombre_edificio; // LLenamos vector con nombre de edificios
+          nombree = nombre_llenado[fila]+"_"+numeros_salas[fila]; // Unimos nombre de edifico y numero correspondiente
+          edificio_y_numSala[fila] = nombree; // LLenamos el vector que definimos como global con el edificio y numero (ej:M1_201..)
+   }
+}
+
+
+void crear_hojas(){
+	int hoja = 0;
+	int bloques = 0;
+  char buffer[500];
+  lxw_workbook  *workbook  = workbook_new("Horario.xlsx");
+
+  //Escribimos el edificio + numero de sala en cada hoja
+  for (int i = 1; i<54; i++){
+    strcpy(buffer,edificio_y_numSala[i].c_str());
+    lxw_worksheet *worksheet = workbook_add_worksheet(workbook, buffer);
+
+    // Escribir bloques en cada hoja de sala
+    string cadena_bloques[9] = {"8:00-9:30","9:40-11:10","11:20-12:50","13:00-14:30","14:40-16:10","16:20-17:50","18:00-19:30","19:40-21:10","21:20-22:50"};
+    char buffer_bloques[500];
+    for (int c = 0; c<9; c++){
+      strcpy(buffer_bloques,cadena_bloques[c].c_str()); //Convierte la cadena de String a Chart
+      worksheet_write_string(worksheet,c, 0, buffer_bloques, NULL); // Escribe la cadena convertida
+    }
+
+    // Escribir dias en cada hoja de sala
+    string cadena[7] = {"Bloques/Días","Lunes","Martes","Miércoles","Jueves","Viernes"};
+    char buffer_cadena[500];
+    for (int p = 0; p<7; p++){
+      cout << cadena[p] << endl;
+      strcpy(buffer_cadena,cadena[p].c_str());
+      worksheet_write_string(worksheet, 0, p, buffer_cadena, NULL);
+    }
+  }
+	workbook_close(workbook);
+}
+
+int main() {
+    leer();
+    crear_hojas();
+    return 0;
+}

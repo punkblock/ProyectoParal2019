@@ -21,3 +21,25 @@ Para compilar y ejecutar el proyecto hay que pararse en la carpeta Tarea05-Paral
         
         Ejecutar con:
         $./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx
+ 
+### Instalacion libreria para escribir y crear hojas.
+        $ sudo apt-get install -y zlib1g-dev
+        $ git clone https://github.com/jmcnamara/libxlsxwriter.git
+        $ cd libxlsxwriter
+        $ make
+        $ sudo make install
+
+        $ curl -O -L  http://www.zlib.net/zlib-1.2.11.tar.gz
+        $ tar zxf zlib-1.2.11.tar.gz
+        $ sudo apt-get install -y python-pytest
+        
+### Para que ambas libreias funcionen, se tienen que combinar las carpetas xlnt y libxlsxwriter...
+
+### Compilar/Ejecutar
+Para compilar y ejecutar el proyecto:
+
+        Compilar con:
+        $ g++ main.cpp -o tarea -std=c++14 -lxlsxwriter -Ixlnt/include -lxlnt
+        
+        Ejecutar con:
+        $ ./tarea

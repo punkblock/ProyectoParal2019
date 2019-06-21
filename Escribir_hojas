@@ -1,12 +1,31 @@
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
+#include <xlnt/xlnt.hpp>
 #include "xlsxwriter.h"
+
+using namespace std;
+
+void leer(){
+    xlnt::workbook wb;
+    wb.load("/home/charls/libxlsxwriter/Horario.xlsx");
+    auto ws = wb.active_sheet();
+    cout << "Processing spread sheet" << endl;
+    for (auto row : ws.rows(false)) 
+    { 
+        for (auto cell : row) 
+    { 
+        cout << cell.to_string() << endl;
+    }
+    }
+    cout << "Processing complete" << endl;
+}
 
 void crear_hojas(){
 	int hoja = 0;
 	int bloques = 0;
         lxw_workbook  *workbook  = workbook_new("Horario.xlsx");
-	while(hoja<10){
+	while(hoja<42){
 	   hoja++;
 	   lxw_worksheet *worksheet = workbook_add_worksheet(workbook, NULL);
 	   while(bloques<7){
@@ -28,5 +47,6 @@ void crear_hojas(){
 int main() {
 
     crear_hojas();
+    leer();
     return 0;
 }

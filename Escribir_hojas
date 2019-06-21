@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <string.h>
+#include "xlsxwriter.h"
+
+void crear_hojas(){
+	int hoja = 0;
+	int bloques = 0;
+        lxw_workbook  *workbook  = workbook_new("Horario.xlsx");
+	while(hoja<10){
+	   hoja++;
+	   lxw_worksheet *worksheet = workbook_add_worksheet(workbook, NULL);
+	   while(bloques<7){
+		bloques++;		
+		worksheet_write_string(worksheet,bloques, 0, "Bloques", NULL);
+	   }
+           bloques = 0;
+	   
+	   worksheet_write_string(worksheet, 0, 0, "Bloques/Dias", NULL);
+	   worksheet_write_string(worksheet, 0, 1, "Lunes", NULL);
+   	   worksheet_write_string(worksheet, 0, 2, "Martes", NULL);
+	   worksheet_write_string(worksheet, 0, 3, "Miercoles", NULL);
+	   worksheet_write_string(worksheet, 0, 4, "Jueves", NULL);
+	   worksheet_write_string(worksheet, 0, 5, "Viernes", NULL);	    
+	}
+	workbook_close(workbook);
+}
+
+int main() {
+
+    crear_hojas();
+    return 0;
+}

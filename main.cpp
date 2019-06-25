@@ -1,6 +1,8 @@
 #include <iostream>
 #include <xlnt/xlnt.hpp>
 #include <string.h>
+#include <cstdlib>
+#include <string>
 
 using namespace std;
 
@@ -106,6 +108,139 @@ void MateriasProfesor(char *argumento)
 
 }
 
+/*********************************************************/
+
+//crear estructuras
+typedef struct InfoSala {
+    char nombreSala[30];
+    int codigoProfesor;
+} InfoSala;
+
+typedef struct InfoBloque {
+  int dia;
+  int bloque;
+  int codigoAsignatura;
+  int sala;
+} InfoBloque;
+
+typedef struct Profesor {
+  int codigoProfesor;
+  //char nombreProfesor[30];
+  //int diasDisponible[6];
+  int prioridad;
+  int diasBloques[6][7];
+  int estado;
+} Profesor;
+
+typedef struct Ramos{
+  char codigoRamo[20];
+  //char nombreAsignatura[50];
+  int codigoProfesor;
+  int  horasRamo; //si llega a 0 es que ya esta lista no asignar
+  int estado;
+} Ramos;
+
+//asignar los ramos con menor horas
+void prioridad(char *argumento){
+    int profes = 239;
+    while(profes != 0){
+        for (int i=0; i<239; i++ ){
+            // if(prioridad)
+        }
+    }
+}
+
+void infoProfe(char *argumento){
+    Profesor profes[239];
+    int hoja$=0;
+    int j=0,k=0;
+    int fila[500];
+    int columna[20];
+    int excel[500][20];//excel docentes;
+    for (int i=0; i<239; i++){
+        //cambiar por los datos del excel
+        profes[i].codigoProfesor = excel[i][0];
+        k=0;//dia
+        hoja$=0;//primera hoja -- dia lunes
+        for (int k=0; k<8; k++){
+            j=0;//bloque
+            for (int z=4; z<11; z++){
+                profes[i].diasBloques[j][k] = hoja$,excel[i][z]; //z desde 4 a 10 excepto dia sabado
+                j++;
+            }
+            hoja$++;//6 hojas
+        }
+        profes[i].estado = 1; // bloques y codigo cargado
+    }
+}
+
+void infoRamos(char *argumento){
+    xlnt::workbook wb;
+    wb.load(argumento);// Cursos.xlsx
+    int contador = 0;
+    auto ws = wb.active_sheet();
+
+	/* toda la hoja de cálculo */
+	std::vector< std::vector<std::string> > hoja_calculo;
+	std::vector< std::vector<std::string> > columna_c;
+	for (auto row : ws.rows(false)){ 
+
+		// Creando un vector nuevo solo para esta fila en la hoja de cálculo
+		vector<string> fila_simple;
+
+		for (auto cell : row){ 
+		    //Añadiendo esta celda a la fila;
+		    fila_simple.push_back(cell.to_string());
+		}
+
+		//Agregando esta fila completa al vector que almacena toda la hoja de cálculo;
+		hoja_calculo.push_back(fila_simple);
+        }
+    Ramos ramoss[346];
+
+    for (int fila = 1; fila < hoja_calculo.size(); fila++){
+        string cRamo = hoja_calculo.at(fila).at(0);
+        char cstr[cRamo.size() + 1];
+	    strcpy(cstr, cRamo.c_str());
+        strcpy(ramoss[fila].codigoRamo, cstr);// codigo ramo
+        int codProfe = std::atoi (hoja_calculo.at(fila).at(2).c_str());
+        ramoss[fila].codigoProfesor = codProfe;
+        int horRamo = std::atoi (hoja_calculo.at(fila).at(5).c_str());
+        ramoss[fila].horasRamo = horRamo;
+
+        cout << "CodRamo: " << ramoss[fila].codigoRamo << endl;
+        cout << "CodProfe: " << ramoss[fila].codigoProfesor << endl;
+        cout << "HoraRamos: " << ramoss[fila].horasRamo << endl;
+    }
+        
+    // Ramos ramoss[346];
+    // int excel[500][20]; //excel cursos
+    // for (int i=0; i<346; i++){
+    //     ramoss[i].codigoRamo= excel[i][0];
+    //     ramoss[i].codigoProfesor = excel[i][2];
+    //     ramoss[i].horasRamo = excel[i][5];
+    // }
+}
+
+void infoSalas(char *argumento){
+    InfoSala salass[53];
+    int excel[500][20]; //excel cursos
+    for (int i=0; i<346; i++){
+        //strcpy(salass[i].nombreSala, excel[i][0]);//concatena M1
+        //strcpy(salass[i].nombreSala, excel[i][1]);//concatena 301
+    }
+}
+
+void infoBlock(char *argumento){
+    InfoBloque block[7][6];
+    for (int i=0; i<8; i++){
+        for (int j=0; j<7; j++){
+            
+        }
+    }
+}
+
+/*********************************************************/
 
 int main( int argc, char *argv[])
 {
@@ -133,9 +268,11 @@ int main( int argc, char *argv[])
 	//Si argumento es igual a -c, se utiliza Cursos.xlsx
 	else if(argumento == "-c")
         {
-            cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
-            cout << "Funcion de materias repetidas " << endl;
-            MateriasProfesor(argv[i +1]);
+            cout << "Funcion de Info de Ramos " << endl;
+            //infoRamos(argv[i +1]);
+            //cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
+            //cout << "Funcion de materias repetidas " << endl;
+            //MateriasProfesor(argv[i +1]);
         }
     }
     

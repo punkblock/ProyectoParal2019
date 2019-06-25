@@ -146,32 +146,70 @@ void prioridad(char *argumento){
     while(profes != 0){
         for (int i=0; i<239; i++ ){
             // if(prioridad)
-            //prueba .gitignore
+
         }
     }
 }
 
 void infoProfe(char *argumento){
+    xlnt::workbook wb;
+    wb.load(argumento);// Cursos.xlsx
+    int contador = 0;
+    auto ws = wb.active_sheet();
+    //auto ws = wb.sheet_by_id(0);
+
+	/* toda la hoja de cálculo */
+	std::vector< std::vector<std::string> > hoja_calculo;
+	std::vector< std::vector<std::string> > columna_c;
+	for (auto row : ws.rows(false)){ 
+
+		// Creando un vector nuevo solo para esta fila en la hoja de cálculo
+		vector<string> fila_simple;
+
+		for (auto cell : row){ 
+		    //Añadiendo esta celda a la fila;
+		    fila_simple.push_back(cell.to_string());
+		}
+
+		//Agregando esta fila completa al vector que almacena toda la hoja de cálculo;
+		hoja_calculo.push_back(fila_simple);
+        }
+
     Profesor profes[239];
+    //excel docentes;
     int hoja$=0;
     int j=0,k=0;
     int fila[500];
     int columna[20];
-    int excel[500][20];//excel docentes;
-    for (int i=0; i<239; i++){
+    int cont = 1;
+    for (int fila = 1; fila < hoja_calculo.size(); fila++){
         //cambiar por los datos del excel
-        profes[i].codigoProfesor = excel[i][0];
+        int codProfe = std::atoi (hoja_calculo.at(fila).at(0).c_str());
+        profes[fila].codigoProfesor = codProfe;
+        cout << "Cod Profe: " << profes[fila].codigoProfesor << endl << endl;
         k=0;//dia
         hoja$=0;//primera hoja -- dia lunes
+        int dsp=0;
         for (int k=0; k<8; k++){
             j=0;//bloque
-            for (int z=4; z<11; z++){
-                profes[i].diasBloques[j][k] = hoja$,excel[i][z]; //z desde 4 a 10 excepto dia sabado
+            for (int z=3; z<10; z++){
+                string disp = "DISPONIBLE";
+                string noDisp = "NO DISPONIBLE";
+                string sss=hoja_calculo.at(fila).at(z).c_str();
+                cout << sss << endl;
+                if(sss == disp){
+                    dsp=0;
+                }
+                if(sss == noDisp){
+                    dsp=1;
+                }
+                //int bloque = std::atoi (hoja_calculo.at(fila).at(z).c_str());
+                profes[fila].diasBloques[j][k] = dsp; //z desde 4 a 10 excepto dia sabado
+                cout << "Bloquelibre: " << j << k << ": " << profes[fila].diasBloques[j][k] << endl;
                 j++;
             }
-            hoja$++;//6 hojas
         }
-        profes[i].estado = 1; // bloques y codigo cargado
+        profes[fila].estado = 1; // bloques y codigo cargado
     }
 }
 
@@ -258,11 +296,13 @@ int main( int argc, char *argv[])
         else if (argumento == "-d")
         {
             cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
+            cout << "Funcion de Info de profe " << endl;
+            infoProfe(argv[i +1]);
         }
 	//Si argumento es igual a -c, se utiliza Cursos.xlsx
 	else if(argumento == "-c")
         {
-            cout << "Funcion de Info de Ramos " << endl;
+            cout << "Funcion de Info de ramos " << endl;
             //infoRamos(argv[i +1]);
             //cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
             //cout << "Funcion de materias repetidas " << endl;

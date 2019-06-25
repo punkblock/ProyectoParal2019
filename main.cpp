@@ -146,6 +146,7 @@ void prioridad(char *argumento){
     while(profes != 0){
         for (int i=0; i<239; i++ ){
             // if(prioridad)
+            //prueba .gitignore
         }
     }
 }

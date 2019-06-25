@@ -123,6 +123,14 @@ typedef struct InfoBloque {
   int sala;
 } InfoBloque;
 
+typedef struct Ramos{
+  char codigoRamo[20];
+  //char nombreAsignatura[50];
+  int codigoProfesor;
+  int  horasRamo; //si llega a 0 es que ya esta lista no asignar
+  int estado;
+} Ramos;
+
 typedef struct Profesor {
   int codigoProfesor;
   //char nombreProfesor[30];
@@ -131,14 +139,6 @@ typedef struct Profesor {
   int diasBloques[6][7];
   int estado;
 } Profesor;
-
-typedef struct Ramos{
-  char codigoRamo[20];
-  //char nombreAsignatura[50];
-  int codigoProfesor;
-  int  horasRamo; //si llega a 0 es que ya esta lista no asignar
-  int estado;
-} Ramos;
 
 //asignar los ramos con menor horas
 void prioridad(char *argumento){
@@ -213,13 +213,6 @@ void infoRamos(char *argumento){
         cout << "HoraRamos: " << ramoss[fila].horasRamo << endl;
     }
         
-    // Ramos ramoss[346];
-    // int excel[500][20]; //excel cursos
-    // for (int i=0; i<346; i++){
-    //     ramoss[i].codigoRamo= excel[i][0];
-    //     ramoss[i].codigoProfesor = excel[i][2];
-    //     ramoss[i].horasRamo = excel[i][5];
-    // }
 }
 
 void infoSalas(char *argumento){

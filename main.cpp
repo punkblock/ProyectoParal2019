@@ -1,114 +1,158 @@
+#include <stdio.h>
+#include <string.h>
 #include <iostream>
 #include <xlnt/xlnt.hpp>
-#include <string.h>
-#include <cstdlib>
-#include <string>
+#include "xlsxwriter.h"
 
 using namespace std;
 
-//Funcion para contar filas de los archivos.xlsx
-int contarFilas(char *argumento){
+//Se devine variable global con arreglo de salas lleno
+string edificio_y_numSala[500];
+// string Docente_Lunes[3000];
+// string Docente_Martes[3000];
+// string Docente_Miercoles[3000];
+// string Docente_Jueves[3000];
+// string Docente_Viernes[3000];
+// string Docente_Sabado[3000];
+vector<vector<string>> hoja_Docente;
+
+void recorrer_dias_docentes(char *argumento){
+  // Lee sample1.xlsx e imprime un 2-dimensional
+  // representación de cada hoja. Las celdas están separadas por comas.
+  // Cada nueva línea es una nueva fila.
+  xlnt::workbook wb;
+  wb.load(argumento);
+  auto ws = wb.active_sheet();
+
+   // La clase de libro de trabajo tiene métodos de inicio y fin, por lo que puede repetirse.
+   // Cada elemento es una hoja en el libro de trabajo.
+   //vector<vector<string>> hoja_Docente;
+
+   for(const auto sheet : wb){
+
+       // Imprime el título de la hoja en su propia línea.
+       //cout << sheet.title() << ": " << endl;
+
+       // Iterando en un rango, como en la hoja de trabajo :: rows, produce cell_vectors.
+       // Los vectores celulares en realidad no contienen celdas para reducir la sobrecarga.
+       // En su lugar, contienen una referencia a una hoja de cálculo y la referencia de celda actual.
+       // Internamente, llamar a la hoja de trabajo :: get_cell con la cell_reference actual produce la siguiente celda.
+       // Esto permite una iteración fácil y rápida sobre una fila (a veces una columna) en la hoja de trabajo.
+
+           for(auto row : sheet.rows()){
+                 vector<string> filas;
+                   for(auto cell : row){
+                       //cout << cell << ", ";
+                       filas.push_back(cell.to_string());
+                       //Arreglo con la info del lunes
+                      // Docente_Lunes[cell];
+                   }
+                   hoja_Docente.push_back(filas);
+                   //cout <<endl;
+
+         }
+
+
+       }
+       // if(sheet.title()=="Martes"){
+       //     for(auto row : sheet.rows()){
+       //       vector<string> fila_lunes;
+       //         for(auto cell : row){
+       //             //cout << cell << ", ";
+       //             fila_lunes.push_back(cell.to_string());
+       //             //Arreglo con la info del lunes
+       //            // Docente_Lunes[cell];
+       //         }
+       //         hoja_Docente.push_back(fila_lunes);
+       //         //cout <<endl;
+       //     }
+       //     string Id,Nombre,Apellido,Bloque1,Bloque2,Bloque3,Bloque4,Bloque5,Bloque6,Bloque7;
+       //     for (int fila = 1; fila < hoja_Docente.size(); fila++){
+       //       Id = hoja_Docente.at(fila).at(0); Nombre = hoja_Docente.at(fila).at(1);
+       //       Apellido = hoja_Docente.at(fila).at(2); Bloque1 = hoja_Docente.at(fila).at(3);
+       //       Bloque2 = hoja_Docente.at(fila).at(4); Bloque3 = hoja_Docente.at(fila).at(5);
+       //       Bloque4 = hoja_Docente.at(fila).at(6); Bloque5 = hoja_Docente.at(fila).at(7);
+       //       Bloque6 = hoja_Docente.at(fila).at(8); Bloque7 = hoja_Docente.at(fila).at(9);
+       //       Docente_Lunes[fila] = Id +" "+ Nombre+" "+ Apellido+" "+ Bloque1+" "+ Bloque2+" "+ Bloque3+" "+ Bloque4+" "+ Bloque5+" "+ Bloque6+" "+ Bloque7;
+       //       //std::cout <<  Docente_Lunes[fila] << '\n';
+
+
+  // }
+
+      }
+
+// void Verificar_arreglos(){
+//       for (int fila = 1; fila <240; fila++){
+//         std::cout <<Docente_Lunes[1][1] << '\n';
+//       }
+// }
+
+void leer(){
     xlnt::workbook wb;
-    wb.load(argumento);
-    int contador = 0;
+    wb.load("/home/charls/libxlsxwriter/Salas.xlsx");
     auto ws = wb.active_sheet();
-    for (auto row : ws.rows(false)) 
-    { 
-	contador = contador + 1;
-    }
-    return contador;
+
+    /* Lee toda la hoja de cálculo */
+  	vector<vector<string>> hoja_calculo;
+  	vector<vector<string>> columna_c;
+    for (auto row : ws.rows(false)){
+        vector<string> fila_simple; // Creando un vector nuevo solo para esta fila en la hoja de cálculo
+  		    for (auto cell : row){
+  		        fila_simple.push_back(cell.to_string());  //Añadiendo esta celda a la fila;
+  		    }
+  		    hoja_calculo.push_back(fila_simple); //Agregando esta fila completa al vector que almacena toda la hoja de cálculo;
+      }
+
+       // Definimos variables y vectores a utilizar
+       string nombre_edificio; // Nombre del edificio
+       int numero_sala = 0;
+       string nombreNumero;
+       int numeros[500];
+       string nombree;
+       string nombre_llenado[500];
+       string numeros_salas[500];
+
+      // Primer For para recorrer el archivo completo
+      for (int fila = 1; fila < hoja_calculo.size(); fila++){
+          nombre_edificio = hoja_calculo.at(fila).at(0); // Se guarda nombre el edificio
+          nombreNumero = hoja_calculo.at(fila).at(1); // Se guarda el numero de salas
+          numero_sala = stoi(nombreNumero, nullptr); // Se Convierte de string a entero
+          numeros_salas[fila] = nombreNumero; // LLenamos vector con numero de salas
+          nombre_llenado[fila] = nombre_edificio; // LLenamos vector con nombre de edificios
+          nombree = nombre_llenado[fila]+"_"+numeros_salas[fila]; // Unimos nombre de edifico y numero correspondiente
+          edificio_y_numSala[fila] = nombree; // LLenamos el vector que definimos como global con el edificio y numero (ej:M1_201..)
+   }
 }
 
-// Funcion materias repetidas
-void MateriasProfesor(char *argumento)
-{
-    xlnt::workbook wb;
-    wb.load(argumento);
-    int contador = 0;
-    auto ws = wb.active_sheet();
+void crear_hojas(){
+	int hoja = 0;
+	int bloques = 0;
+  char buffer[500];
+  lxw_workbook  *workbook  = workbook_new("Horario.xlsx");
 
-	/* toda la hoja de cálculo */
-	std::vector< std::vector<std::string> > hoja_calculo;
-	std::vector< std::vector<std::string> > columna_c;
-	for (auto row : ws.rows(false)){ 
+  //Escribimos el edificio + numero de sala en cada hoja
+  for (int i = 1; i<54; i++){
+    strcpy(buffer,edificio_y_numSala[i].c_str());
+    lxw_worksheet *worksheet = workbook_add_worksheet(workbook, buffer);
 
-		// Creando un vector nuevo solo para esta fila en la hoja de cálculo
-		vector<string> fila_simple;
-
-		for (auto cell : row){ 
-		    //Añadiendo esta celda a la fila;
-		    fila_simple.push_back(cell.to_string());
-		}
-
-		//Agregando esta fila completa al vector que almacena toda la hoja de cálculo;
-		hoja_calculo.push_back(fila_simple);
-        }
-
-    // Cantidad de materias que tiene un profesor
-	int contador_bloques = 0;
-    // Variable para ver si existe más de una vez el profesor
-    int existe = 0;
-    // Nombre del profesor
-    string nombre;
-    // id del profesor
-    int idNumero = 0;
-    // Arreglo con los id de cada profesor
-    int idNumeros[500];
-    // Variable auxiliar donde se guarda idNumero como string
-    string nombreNumero;
-    // Primer For para recorrer el archivo completo
-    for (int fila = 1; fila < hoja_calculo.size(); fila++){
-        contador_bloques = 0;
-        existe = 0;
-        // Se guarda nombre del profesor
-        nombre = hoja_calculo.at(fila).at(3);
-        // Se guarda idNumero como string
-        nombreNumero = hoja_calculo.at(fila).at(2);
-        // Se convierte idNumero a entero
-        idNumero = stoi(nombreNumero, nullptr);
-        // Se agrega el idNumero al arreglo de los id
-        idNumeros[fila] = idNumero;
-        // Se recorre idNumeros[] para saber si ya se conto la cantidad de materias
-        // Que tiene asignadas el profesor
-        for (int i = 0 ; i < 500; i++)
-        {
-            // Si existe el id en el arreglo, entonces existe++
-            if (idNumero == idNumeros[i+1])
-            {
-                //cout << "EXISTE ID: " << idNumeros[i] << endl;
-                existe++;
-            }
-        }
-        // Si no existe el id en el arreglo se cuenta cuantas veces se repite el id del profesor
-        // Para saber cuantas materias tiene asignadas
-        if (existe < 2)
-                {
-		    //cout << "No existe ID: " << endl;
-            // Se recorre Cursos.xlsx 
-	        for (int fila2 = 0; fila2 < hoja_calculo.size(); fila2++)
-	        {
-		      for (int columna2 = 0; columna2 < hoja_calculo.at(fila2).size(); columna2++)
-		      {
-
-		      }
-                // Se compara el nombre del profesor en el archivo
-	            if(nombre==(hoja_calculo.at(fila2).at(3)))
-                {
-                    // Se guarda la cantidad de veces que existe el nombre del profesor
-		            contador_bloques++;
-		        
-	            }
-	        }
-            // Muestra el numero de fila que aparece el profesor por primera vez
-	        cout << "NUMERO DE FILA" << fila << endl;
-            // Muestra el nombre del profesor y la cantidad de ramos
-            cout<<"Profesor: "<<nombre<<" , cantidad de ramos: "<<contador_bloques<<endl;
-        }
+    // Escribir bloques en cada hoja de sala
+    string cadena_bloques[9] = {"8:00-9:30","9:40-11:10","11:20-12:50","13:00-14:30","14:40-16:10","16:20-17:50","18:00-19:30","19:40-21:10","21:20-22:50"};
+    char buffer_bloques[500];
+    for (int c = 0; c<9; c++){
+      strcpy(buffer_bloques,cadena_bloques[c].c_str()); //Convierte la cadena de String a Chart
+      worksheet_write_string(worksheet,c, 0, buffer_bloques, NULL); // Escribe la cadena convertida
     }
 
+    // Escribir dias en cada hoja de sala
+    string cadena[7] = {"Bloques/Días","Lunes","Martes","Miércoles","Jueves","Viernes"};
+    char buffer_cadena[500];
+    for (int p = 0; p<7; p++){
+      strcpy(buffer_cadena,cadena[p].c_str());
+      worksheet_write_string(worksheet, 0, p, buffer_cadena, NULL);
+    }
+  }
+	workbook_close(workbook);
 }
-
-/*********************************************************/
 
 //crear estructuras
 typedef struct InfoSala {
@@ -161,12 +205,12 @@ void infoProfe(char *argumento){
 	/* toda la hoja de cálculo */
 	std::vector< std::vector<std::string> > hoja_calculo;
 	std::vector< std::vector<std::string> > columna_c;
-	for (auto row : ws.rows(false)){ 
+	for (auto row : ws.rows(false)){
 
 		// Creando un vector nuevo solo para esta fila en la hoja de cálculo
 		vector<string> fila_simple;
 
-		for (auto cell : row){ 
+		for (auto cell : row){
 		    //Añadiendo esta celda a la fila;
 		    fila_simple.push_back(cell.to_string());
 		}
@@ -182,9 +226,9 @@ void infoProfe(char *argumento){
     int fila[500];
     int columna[20];
     int cont = 1;
-    for (int fila = 1; fila < hoja_calculo.size(); fila++){
+    for (int fila = 1; fila < hoja_Docente.size(); fila++){
         //cambiar por los datos del excel
-        int codProfe = std::atoi (hoja_calculo.at(fila).at(0).c_str());
+        int codProfe = std::atoi (hoja_Docente.at(fila).at(0).c_str());
         profes[fila].codigoProfesor = codProfe;
         cout << "Cod Profe: " << profes[fila].codigoProfesor << endl << endl;
         k=0;//dia
@@ -222,12 +266,12 @@ void infoRamos(char *argumento){
 	/* toda la hoja de cálculo */
 	std::vector< std::vector<std::string> > hoja_calculo;
 	std::vector< std::vector<std::string> > columna_c;
-	for (auto row : ws.rows(false)){ 
+	for (auto row : ws.rows(false)){
 
 		// Creando un vector nuevo solo para esta fila en la hoja de cálculo
 		vector<string> fila_simple;
 
-		for (auto cell : row){ 
+		for (auto cell : row){
 		    //Añadiendo esta celda a la fila;
 		    fila_simple.push_back(cell.to_string());
 		}
@@ -251,7 +295,7 @@ void infoRamos(char *argumento){
         cout << "CodProfe: " << ramoss[fila].codigoProfesor << endl;
         cout << "HoraRamos: " << ramoss[fila].horasRamo << endl;
     }
-        
+
 }
 
 void infoSalas(char *argumento){
@@ -267,22 +311,36 @@ void infoBlock(char *argumento){
     InfoBloque block[7][6];
     for (int i=0; i<8; i++){
         for (int j=0; j<7; j++){
-            
+
         }
     }
 }
 
-/*********************************************************/
+int contarFilas(char *argumento){
+    xlnt::workbook wb;
+    wb.load(argumento);
+    int contador = 0;
+    auto ws = wb.active_sheet();
+    for (auto row : ws.rows(false))
+    {
+	contador = contador + 1;
+    }
+    return contador;
+}
 
-int main( int argc, char *argv[])
-{
+int main( int argc, char *argv[]) {
+
+    leer();
+    crear_hojas();
+    //Verificar_arreglos();
+
     //argc: numero total de argumentos pasados por linea de comandos
     //argv: array con los argumentos pasados por linea de comandos
 
     //Variable para guardar el argumento
     string argumento;
 
-    
+
     //Leyendo los argumentos por argumentos
     for (int i = 0; i < argc; i++)
     {
@@ -295,9 +353,11 @@ int main( int argc, char *argv[])
 	//Si argumento es igual a -d, se utiliza Docentes.xlsx
         else if (argumento == "-d")
         {
+          recorrer_dias_docentes(argv[i +1]);
             cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
             cout << "Funcion de Info de profe " << endl;
             infoProfe(argv[i +1]);
+
         }
 	//Si argumento es igual a -c, se utiliza Cursos.xlsx
 	else if(argumento == "-c")
@@ -309,6 +369,6 @@ int main( int argc, char *argv[])
             //MateriasProfesor(argv[i +1]);
         }
     }
-    
+
     return 0;
 }

@@ -308,6 +308,8 @@ void infoSalas(char *argumento){
       string tSala;
       int tLab=0;
       int j;
+      string lab="LAB";
+      string esLab;
 
       xlnt::workbook wb;
       wb.load(argumento);// Salas.xlsx
@@ -324,7 +326,7 @@ void infoSalas(char *argumento){
             hoja_sala.push_back(filas);
         }
     }
-    InfoSala salass[53];
+    InfoSala salass[54];
 
     for (int fila = 1; fila < hoja_sala.size(); fila++){
 
@@ -335,36 +337,20 @@ void infoSalas(char *argumento){
 
         string numSala = hoja_sala.at(fila).at(1);
         char num[numSala.size() + 1];
-	      strcpy(num, numSala.c_str());
+	    strcpy(num, numSala.c_str());
         strcpy(salass[fila].numeroSala, num);// nombre sala
-
-        if(fila<30){
-            j=0;//bloque
-            for (int z=0; z<2; z++){//z: columnas
-              cout<<z;
-                tipo = "LAB";
-                tSala=hoja_sala.at(fila).at(z).c_str();//guarda dia bloque
-                if(tSala == tipo){
-                    tLab=0;
-                }
-                if(tSala != tipo){
-                    tLab=1;
-                }
-                if(cont2<54){
-                    salass[cont2].lab = tLab; //z desde 4 a 10 excepto dia sabado
-                }
-                j++;
-            }
+        
+        esLab=hoja_sala.at(fila).at(0);
+        cout<< esLab << "==" << lab << endl << endl;
+        if (lab== esLab){
+            salass[fila].lab = 1;//Si es lab
         }
+        if (lab!= esLab){
+            salass[fila].lab = 0;//No es lab
+        }
+        cout << "Edificio:"<< salass[fila].nombreEdificio << " " <<"NumSala: " << salass[fila].numeroSala<< " "<<"Lab?: "<<salass[fila].lab<< endl;
 
-        cout << "Edificio:"<< salass[fila].nombreEdificio << " " <<"NumSala: " << salass[fila].numeroSala<< " "<<"Lab?: "<<salass[cont2].lab<< endl;
-
-    int excel[500][20]; //excel cursos
-    for (int i=0; i<346; i++){
-        //strcpy(salass[i].nombreSala, excel[i][0]);//concatena M1
-        //strcpy(salass[i].nombreSala, excel[i][1]);//concatena 301
     }
-}
 }
 
 void infoBlock(char *argumento){
@@ -394,13 +380,14 @@ int main( int argc, char *argv[])
 	//Si argumento es igual a -s, se utiliza Salas.xlsx
 	if (argumento == "-s")
         {
-            cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
+            //cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
+            cout << "Funcion de Info de salas " << endl;
             infoSalas(argv[i + 1]);
         }
 	//Si argumento es igual a -d, se utiliza Docentes.xlsx
         else if (argumento == "-d")
         {
-            cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
+            //cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
             cout << "Funcion de Info de profe " << endl;
             //infoProfe(argv[i +1]);
         }

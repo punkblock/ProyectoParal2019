@@ -112,7 +112,9 @@ void MateriasProfesor(char *argumento)
 
 //crear estructuras
 typedef struct InfoSala {
-    char nombreSala[30];
+    char nombreEdificio[30];
+    char numeroSala[30];
+    int lab;
     int codigoProfesor;
 } InfoSala;
 
@@ -123,18 +125,19 @@ typedef struct InfoBloque {
   int sala;
 } InfoBloque;
 
+//Listo
 typedef struct Ramos{
   char codigoRamo[20];
-  //char nombreAsignatura[50];
   int codigoProfesor;
-  int  horasRamo; //si llega a 0 es que ya esta lista no asignar
+  int  horasRamo;
   int estado;
 } Ramos;
 
+//Listo
 typedef struct Profesor {
   int codigoProfesor;
   //char nombreProfesor[30];
-  //int diasDisponible[6];
+  //int diasDisp[6];
   int prioridad;
   int diasBloques[7][6];
   int estado;
@@ -155,12 +158,10 @@ void infoProfe(char *argumento){
     xlnt::workbook wb;
     wb.load(argumento);// Docentes.xlsx
     auto ws = wb.active_sheet();
-    //auto ws = wb.sheet_by_id(0);
 
 	/* toda la hoja de cálculo */
 	std::vector< std::vector<std::string> > hoja_calculo;
 	// std::vector< std::vector<std::string> > columna_c;
-	// for (auto row : ws.rows(false)){
         for(const auto sheet : wb){ 
             for(auto row : sheet.rows()){
                 vector<string> filas;
@@ -172,18 +173,6 @@ void infoProfe(char *argumento){
                 //cout <<endl;
             }
         }
-
-		// Creando un vector nuevo solo para esta fila en la hoja de cálculo
-		// vector<string> fila_simple;
-
-		// for (auto cell : sheet.rows()){ 
-		//     //Añadiendo esta celda a la fila;
-		//     fila_simple.push_back(cell.to_string());
-		// }
-
-		// //Agregando esta fila completa al vector que almacena toda la hoja de cálculo;
-		// hoja_calculo.push_back(fila_simple);
-        // }
 
     Profesor profes[239];
     //excel docentes;
@@ -200,7 +189,6 @@ void infoProfe(char *argumento){
     string noDisp;
     string bloquee;
     for  (int fila = 1; fila < hoja_calculo.size(); fila++){
-        //cambiar por los datos del excel
         //std::cout << hoja_calculo.at(fila).at(0) << endl;
         //std::cout  << "Fila : " << fila<< endl;
         if(fila == 240 || fila == 480 || fila == 720 || fila == 960 || fila == 1200){
@@ -213,9 +201,6 @@ void infoProfe(char *argumento){
         }else{
             // if(fila == 1439){
                  //std::cout << endl << "Fin Hoja : " << hoja << endl << endl;
-            // }
-            // if(cont>239){
-            //     cont=0;
             // }
             if(cont<239){
                 int codProfe = std::atoi (hoja_calculo.at(fila).at(0).c_str());
@@ -239,7 +224,6 @@ void infoProfe(char *argumento){
                     if(bloquee == noDisp){
                         dsp=1;
                     }
-                    //int bloque = std::atoi (hoja_calculo.at(fila).at(z).c_str());
                     if(cont2<239){
                         profes[cont2].diasBloques[j][k] = dsp; //z desde 4 a 10 excepto dia sabado
                     }
@@ -250,7 +234,7 @@ void infoProfe(char *argumento){
             }
             if(fila>1200){
                 j=0;//bloque
-                std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
+                // std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
                 for (int z=3; z<7; z++){//z: columnas
                     disp = "DISPONIBLE";
                     noDisp = "NO DISPONIBLE";
@@ -262,12 +246,11 @@ void infoProfe(char *argumento){
                     if(bloquee == noDisp){
                         dsp=1;
                     }
-                    //int bloque = std::atoi (hoja_calculo.at(fila).at(z).c_str());
                     if(cont2<239){
                         profes[cont2].diasBloques[j][k] = dsp; //z desde 4 a 10 excepto dia sabado
                     }
                     // std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
-                    std::cout << "Bloquelibre: " << j << k << ": " << profes[cont2].diasBloques[j][k] << endl;
+                    // std::cout << "Bloquelibre: " << j << k << ": " << profes[cont2].diasBloques[j][k] << endl;
                     j++;
                 }
             }
@@ -320,12 +303,68 @@ void infoRamos(char *argumento){
 }
 
 void infoSalas(char *argumento){
+      int cont2= 0;
+      string tipo;
+      string tSala;
+      int tLab=0;
+      int j;
+
+      xlnt::workbook wb;
+      wb.load(argumento);// Salas.xlsx
+      auto ws = wb.active_sheet();
+
+    /* toda la hoja de cálculo */
+    std::vector< std::vector<std::string> > hoja_sala;
+    for(const auto sheet : wb){
+        for(auto row : sheet.rows()){
+            vector<string> filas;
+            for(auto cell : row){
+                filas.push_back(cell.to_string());
+            }
+            hoja_sala.push_back(filas);
+        }
+    }
     InfoSala salass[53];
+
+    for (int fila = 1; fila < hoja_sala.size(); fila++){
+
+        string eSala = hoja_sala.at(fila).at(0);
+        char cstr[eSala.size() + 1];
+	      strcpy(cstr, eSala.c_str());
+        strcpy(salass[fila].nombreEdificio, cstr);// nombre edificio
+
+        string numSala = hoja_sala.at(fila).at(1);
+        char num[numSala.size() + 1];
+	      strcpy(num, numSala.c_str());
+        strcpy(salass[fila].numeroSala, num);// nombre sala
+
+        if(fila<30){
+            j=0;//bloque
+            for (int z=0; z<2; z++){//z: columnas
+              cout<<z;
+                tipo = "LAB";
+                tSala=hoja_sala.at(fila).at(z).c_str();//guarda dia bloque
+                if(tSala == tipo){
+                    tLab=0;
+                }
+                if(tSala != tipo){
+                    tLab=1;
+                }
+                if(cont2<54){
+                    salass[cont2].lab = tLab; //z desde 4 a 10 excepto dia sabado
+                }
+                j++;
+            }
+        }
+
+        cout << "Edificio:"<< salass[fila].nombreEdificio << " " <<"NumSala: " << salass[fila].numeroSala<< " "<<"Lab?: "<<salass[cont2].lab<< endl;
+
     int excel[500][20]; //excel cursos
     for (int i=0; i<346; i++){
         //strcpy(salass[i].nombreSala, excel[i][0]);//concatena M1
         //strcpy(salass[i].nombreSala, excel[i][1]);//concatena 301
     }
+}
 }
 
 void infoBlock(char *argumento){
@@ -356,22 +395,20 @@ int main( int argc, char *argv[])
 	if (argumento == "-s")
         {
             cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
+            infoSalas(argv[i + 1]);
         }
 	//Si argumento es igual a -d, se utiliza Docentes.xlsx
         else if (argumento == "-d")
         {
             cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
             cout << "Funcion de Info de profe " << endl;
-            infoProfe(argv[i +1]);
-            cout << "Funcion de Info de profe " << endl;
+            //infoProfe(argv[i +1]);
         }
 	//Si argumento es igual a -c, se utiliza Cursos.xlsx
 	else if(argumento == "-c")
         {
             cout << "Funcion de Info de ramos " << endl;
             //infoRamos(argv[i +1]);
-            //cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
-            //cout << "Funcion de materias repetidas " << endl;
             //MateriasProfesor(argv[i +1]);
         }
     }

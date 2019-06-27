@@ -136,7 +136,7 @@ typedef struct Profesor {
   //char nombreProfesor[30];
   //int diasDisponible[6];
   int prioridad;
-  int diasBloques[6][7];
+  int diasBloques[7][6];
   int estado;
 } Profesor;
 
@@ -185,7 +185,7 @@ void infoProfe(char *argumento){
 		// hoja_calculo.push_back(fila_simple);
         // }
 
-    Profesor profes[238];
+    Profesor profes[239];
     //excel docentes;
     int j=0;
     int k=0;
@@ -202,30 +202,75 @@ void infoProfe(char *argumento){
     for  (int fila = 1; fila < hoja_calculo.size(); fila++){
         //cambiar por los datos del excel
         //std::cout << hoja_calculo.at(fila).at(0) << endl;
-        std::cout  << "Fila : " << fila<< endl;
+        //std::cout  << "Fila : " << fila<< endl;
         if(fila == 240 || fila == 480 || fila == 720 || fila == 960 || fila == 1200){
-            std::cout << endl << "Fin Hoja : " << hoja << endl << endl;
-            std::cout << hoja_calculo.at(fila).at(0) << endl;
+            //std::cout << endl << "Fin Hoja : " << hoja << endl << endl;
+            //std::cout << hoja_calculo.at(fila).at(0) << endl;
             hoja++;
             cont=0;
             cont2=0;
             k++;//dia
         }else{
-            if(fila == 1439){
-                //std::cout << endl << "Fin Hoja : " << hoja << endl << endl;
-            }
-            if(cont>239){
-                cont=0;
-            }
-            if(cont<240){
+            // if(fila == 1439){
+                 //std::cout << endl << "Fin Hoja : " << hoja << endl << endl;
+            // }
+            // if(cont>239){
+            //     cont=0;
+            // }
+            if(cont<239){
                 int codProfe = std::atoi (hoja_calculo.at(fila).at(0).c_str());
                 profes[cont].codigoProfesor = codProfe;//guarda codProfe
-                //cout << "Cod Profe: " << profes[cont].codigoProfesor << endl << endl;
+                //std::cout << "Cod Profe: " << profes[cont].codigoProfesor << endl << endl;
                 //cuenta profesores (desde 1 a 240)
                 cont++;
             }
                 // cout << "Fila N: " << cont << endl;
-            
+            if(fila<1201){
+                j=0;//bloque
+                // std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
+                for (int z=3; z<10; z++){//z: columnas
+                    disp = "DISPONIBLE";
+                    noDisp = "NO DISPONIBLE";
+                    bloquee=hoja_calculo.at(fila).at(z).c_str();//guarda dia bloque
+                    //cout << sss << endl;
+                    if(bloquee == disp){
+                        dsp=0;
+                    }
+                    if(bloquee == noDisp){
+                        dsp=1;
+                    }
+                    //int bloque = std::atoi (hoja_calculo.at(fila).at(z).c_str());
+                    if(cont2<239){
+                        profes[cont2].diasBloques[j][k] = dsp; //z desde 4 a 10 excepto dia sabado
+                    }
+                    // std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
+                    // std::cout << "Bloquelibre: " << j << k << ": " << profes[cont2].diasBloques[j][k] << endl;
+                    j++;
+                }
+            }
+            if(fila>1200){
+                j=0;//bloque
+                std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
+                for (int z=3; z<7; z++){//z: columnas
+                    disp = "DISPONIBLE";
+                    noDisp = "NO DISPONIBLE";
+                    bloquee=hoja_calculo.at(fila).at(z).c_str();//guarda dia bloque
+                    //cout << sss << endl;
+                    if(bloquee == disp){
+                        dsp=0;
+                    }
+                    if(bloquee == noDisp){
+                        dsp=1;
+                    }
+                    //int bloque = std::atoi (hoja_calculo.at(fila).at(z).c_str());
+                    if(cont2<239){
+                        profes[cont2].diasBloques[j][k] = dsp; //z desde 4 a 10 excepto dia sabado
+                    }
+                    // std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
+                    std::cout << "Bloquelibre: " << j << k << ": " << profes[cont2].diasBloques[j][k] << endl;
+                    j++;
+                }
+            }
             cont2++;
             //profes[fila].estado = 1; // bloques y codigo cargado
         }

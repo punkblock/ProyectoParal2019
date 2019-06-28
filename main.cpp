@@ -111,6 +111,7 @@ void MateriasProfesor(char *argumento)
 /*********************************************************/
 
 //crear estructuras
+//Listo
 typedef struct InfoSala {
     char nombreEdificio[30];
     char numeroSala[30];
@@ -118,18 +119,20 @@ typedef struct InfoSala {
     int codigoProfesor;
 } InfoSala;
 
-typedef struct InfoBloque {
-  int dia;
-  int bloque;
-  int codigoAsignatura;
+typedef struct Horario {
+  //int dia;
+  //int bloque;
+  int bloque[7][6];
+  char codigoRamo[20];
+  int codigoProfesor;
   int sala;
-} InfoBloque;
+} Horario;
 
 //Listo
 typedef struct Ramos{
   char codigoRamo[20];
   int codigoProfesor;
-  int  horasRamo;
+  int  horasRamo;//horas que tiene el ramo
   int estado;
 } Ramos;
 
@@ -138,9 +141,9 @@ typedef struct Profesor {
   int codigoProfesor;
   //char nombreProfesor[30];
   //int diasDisp[6];
-  int prioridad;
+  //int prioridad;
   int diasBloques[7][6];
-  int estado;
+  int estado = 0;//0 aun quedan bloques
 } Profesor;
 
 //asignar los ramos con menor horas
@@ -235,7 +238,7 @@ void infoProfe(char *argumento){
             }
             if(fila>1200){
                 j=0;//bloque
-                // std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
+                 //std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
                 for (int z=3; z<7; z++){//z: columnas
                     disp = "DISPONIBLE";
                     noDisp = "NO DISPONIBLE";
@@ -249,9 +252,12 @@ void infoProfe(char *argumento){
                     }
                     if(cont2<239){
                         profes[cont2].diasBloques[j][k] = dsp; //z desde 4 a 10 excepto dia sabado
+                        profes[cont2].diasBloques[4][5] = 2;
+                        profes[cont2].diasBloques[5][5] = 2;
+                        profes[cont2].diasBloques[6][5] = 2;
                     }
                     // std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
-                    // std::cout << "Bloquelibre: " << j << k << ": " << profes[cont2].diasBloques[j][k] << endl;
+                    //std::cout << "Bloquelibre: " << j << k << ": " << profes[cont2].diasBloques[j][k] << endl;
                     j++;
                 }
             }
@@ -355,18 +361,60 @@ void infoSalas(char *argumento){
     }
 }
 
-void infoBlock(char *argumento){
-    InfoBloque block[7][6];
-    for (int i=0; i<8; i++){
-        for (int j=0; j<7; j++){
-            
+Horario block[7][6];
+void infoBlock(){
+    int cantINF=0;
+    int cantProf=0;
+    int dia = 0;
+    for (int c=1; c<347;c++){
+        if(ramoss[c].codigoRamo[0]=='I' && ramoss[c].codigoRamo[1]=='N' && ramoss[c].codigoRamo[2]=='F' && ramoss[c].horasRamo==6){
+            //cout << "Codigo INF" << endl;
+            //cout << ramoss[c].codigoRamo[0]<< ramoss[c].codigoRamo[1]<< ramoss[c].codigoRamo[2] << endl;
+                for(int z = 0; z<239;z++){
+                    //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
+                    if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
+                    std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                    for (int dia=0;dia<6;dia++){
+                        for (int bloque=0;bloque<7;bloque++)
+                        if(profes[z].diasBloques[bloque][dia] == 0 && ramoss[c].horasRamo>0){
+                            //cout << "cantProf: " <<  cantProf << endl;
+                            std::cout << "Horas Ramo: " << ramoss[c].horasRamo<< endl;
+                            //std::cout << "Bloquelibre: " << bloque << dia << ": " << profes[z].diasBloques[bloque][dia] << endl;
+                            //cantProf++;
+                            block[bloque][dia].codigoProfesor = profes[z].codigoProfesor;
+                            profes[z].diasBloques[bloque][dia] = 1;
+                            ramoss[c].horasRamo = ramoss[c].horasRamo -2;
+                        }
+                    }
+                    }
+                }
+            //cout << "Fila: " <<  c << endl;
+            cantINF++;
+        // for (int i=0; i<8; i++){
+        //     for (int j=0; j<7; j++){
+        //     }
+        // }
         }
     }
+
+    for(int z = 0; z<239;z++){
+        if(profes[z].codigoProfesor == 2992){
+        std::cout << "CodProfe: " << profes[z].codigoProfesor << endl << endl; 
+        for (int dia=0;dia<6;dia++){
+            std::cout << "Dia: " << dia << endl;
+            for (int bloque=0;bloque<7;bloque++){
+                //cout << "cantProf: " <<  cantProf << endl;
+                //std::cout << "Bloquelibre: " << bloque << dia << ": " << profes[z].diasBloques[bloque][dia] << endl;
+                //cantProf++;
+                std::cout << "Bloquelibre: " << bloque << dia << ": " << block[bloque][dia].codigoProfesor << endl;
+            }
+        }
+        }
+    }
+
+    std::cout << "Cantidad de INF: " <<  cantINF << endl;
 }
 
-void asignar(){
-
-}
 
 /*********************************************************/
 
@@ -402,6 +450,7 @@ int main( int argc, char *argv[])
             infoRamos(argv[i +1]);
         }
     }
+    infoBlock();
     //Lectura de Estructuras
     // for (int c=1; c<239;c++){
     //     cout << "CodProfe: " << profes[c].codigoProfesor << endl;

@@ -154,6 +154,7 @@ void prioridad(char *argumento){
     }
 }
 
+Profesor profes[239];
 void infoProfe(char *argumento){
     xlnt::workbook wb;
     wb.load(argumento);// Docentes.xlsx
@@ -174,7 +175,7 @@ void infoProfe(char *argumento){
             }
         }
 
-    Profesor profes[239];
+    // Profesor profes[239];
     //excel docentes;
     int j=0;
     int k=0;
@@ -261,6 +262,7 @@ void infoProfe(char *argumento){
     std::cout << "FIN Docentes.xlsx" << endl;
 }   
 
+Ramos ramoss[346];
 void infoRamos(char *argumento){
     xlnt::workbook wb;
     wb.load(argumento);// Cursos.xlsx
@@ -283,7 +285,7 @@ void infoRamos(char *argumento){
 		//Agregando esta fila completa al vector que almacena toda la hoja de cálculo;
 		hoja_calculo.push_back(fila_simple);
         }
-    Ramos ramoss[346];
+    // Ramos ramoss[346];
 
     for (int fila = 1; fila < hoja_calculo.size(); fila++){
         string cRamo = hoja_calculo.at(fila).at(0);
@@ -295,13 +297,14 @@ void infoRamos(char *argumento){
         int horRamo = std::atoi (hoja_calculo.at(fila).at(5).c_str());
         ramoss[fila].horasRamo = horRamo;
 
-        cout << "CodRamo: " << ramoss[fila].codigoRamo << endl;
-        cout << "CodProfe: " << ramoss[fila].codigoProfesor << endl;
-        cout << "HoraRamos: " << ramoss[fila].horasRamo << endl;
-    }
-        
+        // cout << "Fila: " << fila << endl;
+        // cout << "CodRamo: " << ramoss[fila].codigoRamo << endl;
+        // cout << "CodProfe: " << ramoss[fila].codigoProfesor << endl;
+        // cout << "HoraRamos: " << ramoss[fila].horasRamo << endl;
+    }  
 }
 
+InfoSala salass[54];
 void infoSalas(char *argumento){
       int cont2= 0;
       string tipo;
@@ -326,7 +329,7 @@ void infoSalas(char *argumento){
             hoja_sala.push_back(filas);
         }
     }
-    InfoSala salass[54];
+    //InfoSala salass[54];
 
     for (int fila = 1; fila < hoja_sala.size(); fila++){
 
@@ -341,15 +344,14 @@ void infoSalas(char *argumento){
         strcpy(salass[fila].numeroSala, num);// nombre sala
         
         esLab=hoja_sala.at(fila).at(0);
-        cout<< esLab << "==" << lab << endl << endl;
+        //cout<< esLab << "==" << lab << endl << endl;
         if (lab== esLab){
             salass[fila].lab = 1;//Si es lab
         }
         if (lab!= esLab){
             salass[fila].lab = 0;//No es lab
         }
-        cout << "Edificio:"<< salass[fila].nombreEdificio << " " <<"NumSala: " << salass[fila].numeroSala<< " "<<"Lab?: "<<salass[fila].lab<< endl;
-
+        //cout << "Edificio:"<< salass[fila].nombreEdificio << " " <<"NumSala: " << salass[fila].numeroSala<< " "<<"Lab?: "<<salass[fila].lab<< endl;
     }
 }
 
@@ -360,6 +362,10 @@ void infoBlock(char *argumento){
             
         }
     }
+}
+
+void asignar(){
+
 }
 
 /*********************************************************/
@@ -380,25 +386,34 @@ int main( int argc, char *argv[])
 	//Si argumento es igual a -s, se utiliza Salas.xlsx
 	if (argumento == "-s")
         {
-            //cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
             cout << "Funcion de Info de salas " << endl;
             infoSalas(argv[i + 1]);
         }
 	//Si argumento es igual a -d, se utiliza Docentes.xlsx
         else if (argumento == "-d")
         {
-            //cout << "Numero de filas en " << argv[i + 1] << ": " << contarFilas(argv[i + 1]) << endl;
             cout << "Funcion de Info de profe " << endl;
-            //infoProfe(argv[i +1]);
+            infoProfe(argv[i +1]);
         }
 	//Si argumento es igual a -c, se utiliza Cursos.xlsx
 	else if(argumento == "-c")
         {
             cout << "Funcion de Info de ramos " << endl;
-            //infoRamos(argv[i +1]);
-            //MateriasProfesor(argv[i +1]);
+            infoRamos(argv[i +1]);
         }
     }
-    
+    //Lectura de Estructuras
+    // for (int c=1; c<239;c++){
+    //     cout << "CodProfe: " << profes[c].codigoProfesor << endl;
+    //     cout << "Bloquelibre: " << profes[c].diasBloques[6][4] << endl;           
+    // }
+    // for (int c=1; c<347;c++){
+    //     cout << "CodRamo: " << ramoss[c].codigoRamo << endl;
+    //     cout << "CodProfe: " << ramoss[c].codigoProfesor << endl;
+    //     cout << "HoraRamos: " << ramoss[c].horasRamo << endl;
+    // }
+    // for (int c=1; c<54;c++){
+    //     cout << "Edificio:"<< salass[c].nombreEdificio << " " <<"NumSala: " << salass[c].numeroSala<< " "<<"Lab?: "<<salass[c].lab<< endl;
+    // }
     return 0;
 }

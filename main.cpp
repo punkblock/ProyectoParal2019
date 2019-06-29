@@ -3,6 +3,7 @@
 #include <string.h>
 #include <cstdlib>
 #include <string>
+#include <sstream>//convertir int to string
 
 using namespace std;
 
@@ -115,6 +116,7 @@ void MateriasProfesor(char *argumento)
 typedef struct InfoSala {
     char nombreEdificio[30];
     char numeroSala[30];
+    char sala[30];
     int lab;
     int codigoProfesor;
 } InfoSala;
@@ -122,10 +124,10 @@ typedef struct InfoSala {
 typedef struct Horario {
   //int dia;
   //int bloque;
-  int bloque[7][6];
+  string bloque[7][6];
   char codigoRamo[20];
   int codigoProfesor;
-  int sala;
+  char sala[30];
 } Horario;
 
 //Listo
@@ -133,7 +135,7 @@ typedef struct Ramos{
   char codigoRamo[20];
   int codigoProfesor;
   int  horasRamo;//horas que tiene el ramo
-  int estado;
+  int estado=0;
 } Ramos;
 
 //Listo
@@ -349,6 +351,11 @@ void infoSalas(char *argumento){
 	    strcpy(num, numSala.c_str());
         strcpy(salass[fila].numeroSala, num);// nombre sala
         
+        string completSala = eSala + "-" + numSala;
+        char comSala[completSala.size() + 1];
+        strcpy(comSala, completSala.c_str());
+        strcpy(salass[fila].sala, comSala);
+
         esLab=hoja_sala.at(fila).at(0);
         //cout<< esLab << "==" << lab << endl << endl;
         if (lab== esLab){
@@ -361,59 +368,316 @@ void infoSalas(char *argumento){
     }
 }
 
-Horario block[7][6];
-void infoBlock(){
+Horario block[54];
+void asignarHorario(){
     int cantINF=0;
     int cantProf=0;
     int dia = 0;
-    for (int c=1; c<347;c++){
-        if(ramoss[c].codigoRamo[0]=='I' && ramoss[c].codigoRamo[1]=='N' && ramoss[c].codigoRamo[2]=='F' && ramoss[c].horasRamo==6){
-            //cout << "Codigo INF" << endl;
-            //cout << ramoss[c].codigoRamo[0]<< ramoss[c].codigoRamo[1]<< ramoss[c].codigoRamo[2] << endl;
-                for(int z = 0; z<239;z++){
-                    //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
-                    if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
-                    std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
-                    for (int dia=0;dia<6;dia++){
-                        for (int bloque=0;bloque<7;bloque++)
-                        if(profes[z].diasBloques[bloque][dia] == 0 && ramoss[c].horasRamo>0){
-                            //cout << "cantProf: " <<  cantProf << endl;
-                            std::cout << "Horas Ramo: " << ramoss[c].horasRamo<< endl;
-                            //std::cout << "Bloquelibre: " << bloque << dia << ": " << profes[z].diasBloques[bloque][dia] << endl;
-                            //cantProf++;
-                            block[bloque][dia].codigoProfesor = profes[z].codigoProfesor;
-                            profes[z].diasBloques[bloque][dia] = 1;
-                            ramoss[c].horasRamo = ramoss[c].horasRamo -2;
-                        }
-                    }
-                    }
-                }
-            //cout << "Fila: " <<  c << endl;
-            cantINF++;
-        // for (int i=0; i<8; i++){
-        //     for (int j=0; j<7; j++){
-        //     }
-        // }
-        }
-    }
+    // string queSala;
 
-    for(int z = 0; z<239;z++){
-        if(profes[z].codigoProfesor == 2992){
-        std::cout << "CodProfe: " << profes[z].codigoProfesor << endl << endl; 
+    //Se vacia el horario
+    for(int sal=1;sal<54;sal++){
         for (int dia=0;dia<6;dia++){
-            std::cout << "Dia: " << dia << endl;
             for (int bloque=0;bloque<7;bloque++){
-                //cout << "cantProf: " <<  cantProf << endl;
-                //std::cout << "Bloquelibre: " << bloque << dia << ": " << profes[z].diasBloques[bloque][dia] << endl;
-                //cantProf++;
-                std::cout << "Bloquelibre: " << bloque << dia << ": " << block[bloque][dia].codigoProfesor << endl;
+                block[sal].bloque[bloque][dia]="0";
             }
         }
+    }
+
+    for(int sal=1;sal<54;sal++){
+    // for(int sal=53;sal>0;sal--){
+        //if (salass[sal].nombreEdificio[0]=='L'){
+            string queSala(salass[sal].sala);
+            char qSala[queSala.size() + 1];
+            strcpy(qSala, queSala.c_str());
+            strcpy(block[sal].sala, qSala);
+            //cout << "Sala: " << queSala << endl;
+            if (queSala=="LAB-1" || queSala=="LAB-2" || queSala=="LAB-3" || queSala=="LAB-4" || queSala=="LAB-5" || queSala=="LAB-6"){
+                //cout << "Sala: " << queSala << endl;
+                for (int c=1; c<347;c++){
+                    if(ramoss[c].codigoRamo[0]=='I' && ramoss[c].codigoRamo[1]=='N' && ramoss[c].codigoRamo[2]=='F' && ramoss[c].horasRamo==6){
+                        //cout << "Codigo INF" << endl;
+                        //cout << ramoss[c].codigoRamo[0]<< ramoss[c].codigoRamo[1]<< ramoss[c].codigoRamo[2] << endl;
+                        for(int z = 0; z<239;z++){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
+                            if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                            for (int dia=0;dia<6;dia++){
+                                for (int bloque=0;bloque<7;bloque++){
+                                    if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0)){
+                                        //juntar codProfe y codRamo
+                                        string codCurso(ramoss[c].codigoRamo);
+                                        std::stringstream ss;
+                                        ss << profes[z].codigoProfesor;
+                                        string codProfee = ss.str();
+                                        //Se guarda segun estructura solicitada
+                                        string codProCur = codCurso + "-" + codProfee;
+                                        //cout << codProCur <<endl;
+                                        block[sal].bloque[bloque][dia]=codProCur;
+                                        //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
+                                        //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
+                                        profes[z].diasBloques[bloque][dia] = 1;
+                                        ramoss[c].horasRamo = ramoss[c].horasRamo -2;
+                                        cantINF++;
+                                        if(ramoss[c].horasRamo<=0){
+                                            ramoss[c].estado=1;
+                                        }
+                                    }
+                                }
+                            }
+                            }
+                        }
+                        //cout << "Fila: " <<  c << endl;
+                        
+                    // for (int i=0; i<8; i++){
+                    //     for (int j=0; j<7; j++){
+                    //     }
+                    // }
+                    } else if (ramoss[c].codigoRamo[0]=='I' && ramoss[c].codigoRamo[1]=='N' && ramoss[c].codigoRamo[2]=='F' && ramoss[c].horasRamo==1){
+                        //cout << "Sala: " << queSala << endl;
+                        for(int z = 0; z<239;z++){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
+                            if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                            for (int dia=0;dia<6;dia++){
+                                for (int bloque=0;bloque<7;bloque++){
+                                    if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0)){
+                                        //juntar codProfe y codRamo
+                                        string codCurso(ramoss[c].codigoRamo);
+                                        std::stringstream ss;
+                                        ss << profes[z].codigoProfesor;
+                                        string codProfee = ss.str();
+                                        //Se guarda segun estructura solicitada
+                                        string codProCur = codCurso + "-" + codProfee;
+                                        //cout << codProCur <<endl;
+                                        block[sal].bloque[bloque][dia]=codProCur;
+                                        //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
+                                        //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
+                                        profes[z].diasBloques[bloque][dia] = 1;
+                                        ramoss[c].horasRamo = ramoss[c].horasRamo -1;
+                                        cantINF++;
+                                        if(ramoss[c].horasRamo<=0){
+                                            ramoss[c].estado=1;
+                                        }
+                                    }
+                                }}
+                            }
+                        }
+                        //cout << "Fila: " <<  c << endl;
+                        
+                    }
+                }
+            } else { // FUNCION PARA LAS SALAS QUE NO SON LABS
+                //cout << "Sala: " << queSala << endl;
+                for (int c=1; c<347;c++){
+                    if((ramoss[c].codigoRamo[0]!='I' || ramoss[c].codigoRamo[1]!='N' || ramoss[c].codigoRamo[2]!='F') && ramoss[c].horasRamo==6){
+                        //cout << "Codigo INF" << endl;
+                        //cout << ramoss[c].codigoRamo[0]<< ramoss[c].codigoRamo[1]<< ramoss[c].codigoRamo[2] << endl;
+                        for(int z = 0; z<239;z++){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
+                            if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                            for (int dia=0;dia<6;dia++){
+                                for (int bloque=0;bloque<7;bloque++){
+                                    if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0)){
+                                        //juntar codProfe y codRamo
+                                        string codCurso(ramoss[c].codigoRamo);
+                                        std::stringstream ss;
+                                        ss << profes[z].codigoProfesor;
+                                        string codProfee = ss.str();
+                                        //Se guarda segun estructura solicitada
+                                        string codProCur = codCurso + "-" + codProfee;
+                                        //cout << codProCur <<endl;
+                                        block[sal].bloque[bloque][dia]=codProCur;
+                                        //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
+                                        //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
+                                        profes[z].diasBloques[bloque][dia] = 1;
+                                        ramoss[c].horasRamo = ramoss[c].horasRamo -2;
+                                        cantINF++;
+                                        if(ramoss[c].horasRamo<=0){
+                                            ramoss[c].estado=1;
+                                        }
+                                    }
+                                }}
+                            }
+                        }
+                        //cout << "Fila: " <<  c << endl;
+                        
+                    // for (int i=0; i<8; i++){
+                    //     for (int j=0; j<7; j++){
+                    //     }
+                    // }
+                    } else if ((ramoss[c].codigoRamo[0]!='I' || ramoss[c].codigoRamo[1]!='N' || ramoss[c].codigoRamo[2]!='F') && ramoss[c].horasRamo==4){
+                        //cout << "Sala: " << queSala << endl;
+                        for(int z = 0; z<239;z++){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
+                            if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                            for (int dia=0;dia<6;dia++){
+                                for (int bloque=0;bloque<7;bloque++){
+                                    if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0)){
+                                        //juntar codProfe y codRamo
+                                        string codCurso(ramoss[c].codigoRamo);
+                                        std::stringstream ss;
+                                        ss << profes[z].codigoProfesor;
+                                        string codProfee = ss.str();
+                                        //Se guarda segun estructura solicitada
+                                        string codProCur = codCurso + "-" + codProfee;
+                                        //cout << codProCur <<endl;
+                                        block[sal].bloque[bloque][dia]=codProCur;
+                                        //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
+                                        //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
+                                        profes[z].diasBloques[bloque][dia] = 1;
+                                        ramoss[c].horasRamo = ramoss[c].horasRamo -2;
+                                        cantINF++;
+                                        if(ramoss[c].horasRamo<=0){
+                                            ramoss[c].estado=1;
+                                        }
+                                    }}
+                                }
+                            }
+                        }
+                        //cout << "Fila: " <<  c << endl;
+                        
+                    } else if ((ramoss[c].codigoRamo[0]!='I' || ramoss[c].codigoRamo[1]!='N' || ramoss[c].codigoRamo[2]!='F') && ramoss[c].horasRamo==1){
+                        //cout << "Sala: " << queSala << endl;
+                        for(int z = 0; z<239;z++){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
+                            if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                            for (int dia=0;dia<6;dia++){
+                                for (int bloque=0;bloque<7;bloque++){
+                                    if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0)){
+                                        //juntar codProfe y codRamo
+                                        string codCurso(ramoss[c].codigoRamo);
+                                        std::stringstream ss;
+                                        ss << profes[z].codigoProfesor;
+                                        string codProfee = ss.str();
+                                        //Se guarda segun estructura solicitada
+                                        string codProCur = codCurso + "-" + codProfee;
+                                        //cout << codProCur <<endl;
+                                        block[sal].bloque[bloque][dia]=codProCur;
+                                        //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
+                                        profes[z].diasBloques[bloque][dia] = 1;
+                                        ramoss[c].horasRamo = ramoss[c].horasRamo -1;
+                                        cantINF++;
+                                        if(ramoss[c].horasRamo<=0){
+                                            ramoss[c].estado=1;
+                                        }
+                                    }
+                                }}
+                            }
+                        }
+                        //cout << "Fila: " <<  c << endl;
+                    }
+                }
+            }
+        //}
+    }
+
+////////////////////////////////////////////////////////////////
+    //Ramos no asignados en el primer algoritmo
+    for(int c=1; c<347;c++){
+        if(ramoss[c].estado==0){
+            if(ramoss[c].codigoRamo[0]=='I' && ramoss[c].codigoRamo[1]=='N' && ramoss[c].codigoRamo[2]=='F' && ramoss[c].horasRamo>0){
+                for(int sal=53;sal>0;sal--){
+                string queSala(salass[sal].sala);
+                char qSala[queSala.size() + 1];
+                strcpy(qSala, queSala.c_str());
+                strcpy(block[sal].sala, qSala);
+                    if (queSala=="LAB-1" || queSala=="LAB-2" || queSala=="LAB-3" || queSala=="LAB-4" || queSala=="LAB-5" || queSala=="LAB-6"){
+                        for(int z = 0; z<239;z++){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
+                            if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
+                        
+                        for (int dia=0;dia<6;dia++){
+                            for (int bloque=0;bloque<7;bloque++){
+                                if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0)){
+                                    //juntar codProfe y codRamo
+                                    string codCurso(ramoss[c].codigoRamo);
+                                    std::stringstream ss;
+                                    ss << profes[z].codigoProfesor;
+                                    string codProfee = ss.str();
+                                    //Se guarda segun estructura solicitada
+                                    string codProCur = codCurso + "-" + codProfee;
+                                    //cout << codProCur <<endl;
+                                    block[sal].bloque[bloque][dia]=codProCur;
+                                    std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
+                                    //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
+                                    profes[z].diasBloques[bloque][dia] = 1;
+                                    ramoss[c].horasRamo = ramoss[c].horasRamo -2;
+                                    cantINF++;
+                                    if(ramoss[c].horasRamo<=0){
+                                        ramoss[c].estado=1;
+                                    }
+                                }
+                            }
+                        }
+
+                            }}
+
+                    }   
+                }
+            } else if(ramoss[c].horasRamo>0){
+                for(int sal=53;sal>0;sal--){
+                string queSala(salass[sal].sala);
+                char qSala[queSala.size() + 1];
+                strcpy(qSala, queSala.c_str());
+                strcpy(block[sal].sala, qSala);
+                        for(int z = 0; z<239;z++){
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
+                            if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
+                        
+                        for (int dia=0;dia<6;dia++){
+                            for (int bloque=0;bloque<7;bloque++){
+                                if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0)){
+                                    //juntar codProfe y codRamo
+                                    string codCurso(ramoss[c].codigoRamo);
+                                    std::stringstream ss;
+                                    ss << profes[z].codigoProfesor;
+                                    string codProfee = ss.str();
+                                    //Se guarda segun estructura solicitada
+                                    string codProCur = codCurso + "-" + codProfee;
+                                    //cout << codProCur <<endl;
+                                    block[sal].bloque[bloque][dia]=codProCur;
+                                    std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
+                                    //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
+                                    profes[z].diasBloques[bloque][dia] = 1;
+                                    ramoss[c].horasRamo = ramoss[c].horasRamo -2;
+                                    cantINF++;
+                                    if(ramoss[c].horasRamo<=0){
+                                        ramoss[c].estado=1;
+                                    }
+                                }
+                            }
+                        }
+
+                            }}
+  
+                }
+            }
         }
     }
 
-    std::cout << "Cantidad de INF: " <<  cantINF << endl;
+
+    int cant=0;
+    int noCant=0;
+    std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
+    for (int c=1; c<347;c++){
+        if(ramoss[c].estado==1){
+            cant++;
+        } else if(ramoss[c].estado==0){
+            noCant++;
+        }
+        cout <<"Codigo ramo: " << ramoss[c].codigoRamo <<" Estado ramo: " <<  ramoss[c].estado << endl;
+    }
+    std::cout << "Cantidad de RAMOS asignados: " <<  cant << endl;
+    std::cout << "Cantidad de RAMOS NO asignados: " <<  noCant << endl;
+    std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
 }
+
+
+
 
 
 /*********************************************************/
@@ -450,19 +714,6 @@ int main( int argc, char *argv[])
             infoRamos(argv[i +1]);
         }
     }
-    infoBlock();
-    //Lectura de Estructuras
-    // for (int c=1; c<239;c++){
-    //     cout << "CodProfe: " << profes[c].codigoProfesor << endl;
-    //     cout << "Bloquelibre: " << profes[c].diasBloques[6][4] << endl;           
-    // }
-    // for (int c=1; c<347;c++){
-    //     cout << "CodRamo: " << ramoss[c].codigoRamo << endl;
-    //     cout << "CodProfe: " << ramoss[c].codigoProfesor << endl;
-    //     cout << "HoraRamos: " << ramoss[c].horasRamo << endl;
-    // }
-    // for (int c=1; c<54;c++){
-    //     cout << "Edificio:"<< salass[c].nombreEdificio << " " <<"NumSala: " << salass[c].numeroSala<< " "<<"Lab?: "<<salass[c].lab<< endl;
-    // }
+    asignarHorario();
     return 0;
 }

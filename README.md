@@ -13,15 +13,6 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
         $ sudo make install
         $ sudo ldconfig
         
-### Compilar/Ejecutar
-Para compilar y ejecutar el proyecto hay que pararse en la carpeta Tarea05-Paralela además tener los archivos Salas.xlsx, Docentes.xlsx y Cursos.xlsx:
-
-        Compilar con:
-        $ g++ main.cpp -o tarea -std=c++14 -Ixlnt/include -lxlnt
-        
-        Ejecutar con:
-        $./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx
- 
 ### Instalacion libreria para escribir y crear hojas.
         $ sudo apt-get install -y zlib1g-dev
         $ git clone https://github.com/jmcnamara/libxlsxwriter.git
@@ -42,4 +33,4 @@ Para compilar y ejecutar el proyecto:
         $ g++ main.cpp -o tarea -std=c++14 -lxlsxwriter -Ixlnt/include -lxlnt
         
         Ejecutar con:
-        $ ./tarea
+        $ ./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx

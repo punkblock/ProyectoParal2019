@@ -1,5 +1,6 @@
 #include <iostream>
-#include <xlnt/xlnt.hpp>
+#include <xlnt/xlnt.hpp>//leer excel
+#include "xlsxwriter.h"//escribir excel
 #include <string.h>
 #include <cstdlib>
 #include <string>
@@ -602,7 +603,7 @@ void asignarHorario(){
                                     string codProCur = codCurso + "-" + codProfee;
                                     //cout << codProCur <<endl;
                                     block[sal].bloque[bloque][dia]=codProCur;
-                                    std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
+                                    //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
                                     //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
                                     profes[z].diasBloques[bloque][dia] = 1;
                                     ramoss[c].horasRamo = ramoss[c].horasRamo -2;
@@ -640,7 +641,7 @@ void asignarHorario(){
                                     string codProCur = codCurso + "-" + codProfee;
                                     //cout << codProCur <<endl;
                                     block[sal].bloque[bloque][dia]=codProCur;
-                                    std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
+                                    //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
                                     //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
                                     profes[z].diasBloques[bloque][dia] = 1;
                                     ramoss[c].horasRamo = ramoss[c].horasRamo -2;
@@ -660,24 +661,61 @@ void asignarHorario(){
     }
 
 
-    int cant=0;
-    int noCant=0;
-    std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
-    for (int c=1; c<347;c++){
-        if(ramoss[c].estado==1){
-            cant++;
-        } else if(ramoss[c].estado==0){
-            noCant++;
-        }
-        cout <<"Codigo ramo: " << ramoss[c].codigoRamo <<" Estado ramo: " <<  ramoss[c].estado << endl;
-    }
-    std::cout << "Cantidad de RAMOS asignados: " <<  cant << endl;
-    std::cout << "Cantidad de RAMOS NO asignados: " <<  noCant << endl;
-    std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
+    // int cant=0;
+    // int noCant=0;
+    // std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
+    // for (int c=1; c<347;c++){
+    //     if(ramoss[c].estado==1){
+    //         cant++;
+    //     } else if(ramoss[c].estado==0){
+    //         noCant++;
+    //     }
+    //     cout <<"Codigo ramo: " << ramoss[c].codigoRamo <<" Estado ramo: " <<  ramoss[c].estado << endl;
+    // }
+    //std::cout << "Cantidad de RAMOS asignados: " <<  cant << endl;
+    //std::cout << "Cantidad de RAMOS NO asignados: " <<  noCant << endl;
+    //std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
 }
 
+void crear_hojas(){
+    char buffer[500]; //Variable para almacenar nombre de edificio y hoja convertidos a char
+    lxw_workbook  *workbook  = workbook_new("Horario.xlsx"); //Crear libro de trabajo con el nombre "Horario"
 
+    //Escribimos el edificio + numero de sala en cada hoja
+    for (int i = 1; i<54; i++){ // 54 es la cantidas de salas
+        //strcpy(buffer,block[i].sala.c_str()); //Convierte variable string edificio_y_numSala a char
+        lxw_worksheet *worksheet = workbook_add_worksheet(workbook, block[i].sala); //Escribe el nombre en cada hoja
 
+        // Escribir bloques en cada hoja de sala
+        string cadena_bloques[8] = {"Bloques","08:00-09:30","09:40-11:10","11:20-12:50","13:00-14:30","14:40-16:10","16:20-17:50","18:00-19:30"};
+        char buffer_bloques[500]; //Variable para almacenar los bloques convertidos a char
+    	    for (int c = 0; c<8; c++){ // Recorre cadena de bloques
+            strcpy(buffer_bloques,cadena_bloques[c].c_str()); //Convierte la cadena de String a char
+      	    worksheet_write_string(worksheet,c, 0, buffer_bloques, NULL); //Escribe los bloques en la columa 0 de la hoja
+      	    worksheet_set_column(worksheet, c, 0, 12, NULL); //Ajustar ancho de la columna de bloques
+    	    }
+
+           // Escribir dias del horario en cada hoja de sala
+    	   string cadena[7] = {"Bloques","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"}; //Cadena con los dias del horario
+    	   char buffer_cadena[500]; //Variable para almacenar los dias convertidos a char
+    	   for (int p = 0; p<7; p++){ //Recorre cadena con los dias
+     	       //cout << cadena[p] << endl;	
+      	       strcpy(buffer_cadena,cadena[p].c_str()); //Convierte la cadena de String a char
+      	       worksheet_write_string(worksheet, 0, p, buffer_cadena, NULL); //Escribe los dias en la fila 0 de hoja
+    	   }
+
+        //Escribir bloques en el horario
+        for(int f=0; f<7; f++){//Bloques
+            for(int j=0; j<6; j++){//Dias
+                char buffer_bloque[500];
+                strcpy(buffer_bloque,block[i].bloque[f][j].c_str());
+                worksheet_write_string(worksheet, f+1, j+1, buffer_bloque, NULL);
+            }
+        }
+
+    }
+    workbook_close(workbook);
+}
 
 
 /*********************************************************/
@@ -715,5 +753,6 @@ int main( int argc, char *argv[])
         }
     }
     asignarHorario();
+    crear_hojas();
     return 0;
 }

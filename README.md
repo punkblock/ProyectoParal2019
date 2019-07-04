@@ -1,5 +1,5 @@
-# Tarea05-Paralela
-Tarea05 de la ayudantia de paralela 2019
+# Proyecto-Paralela
+Proyecto de paralela 2019
 
 ## Stack de Construcción
 Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de 64 bits y las herramientas usadas fueron
@@ -24,7 +24,7 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
         $ tar zxf zlib-1.2.11.tar.gz
         $ sudo apt-get install -y python-pytest
         
-### Para que ambas libreias funcionen, se tienen que combinar las carpetas xlnt y libxlsxwriter...
+### Para que ambas librerias funcionen, se tienen que combinar las carpetas xlnt y libxlsxwriter...
 
 ### Compilar/Ejecutar
 Para compilar y ejecutar el proyecto:

@@ -13,7 +13,7 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
 
         $ sudo apt-get install build-essential
         
-- Libreria xlnt
+### Libreria xlnt para leer los archivos.
 
         $ git clone https://github.com/tfussell/xlnt.git
         $ cd xlnt
@@ -22,7 +22,7 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
         $ sudo make install
         $ sudo ldconfig
         
-### Instalacion libreria para escribir y crear hojas.
+### Libreria libxlsxwriter para escribir y crear hojas.
 
         $ sudo apt-get install -y zlib1g-dev
         $ git clone https://github.com/jmcnamara/libxlsxwriter.git

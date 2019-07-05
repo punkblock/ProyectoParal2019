@@ -5,6 +5,10 @@ Proyecto de paralela 2019
 ## Stack de Construcción
 Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de 64 bits y las herramientas usadas fueron
 
+- C++
+
+        $ sudo apt-get install g++
+         
 - CMake
 
         $ sudo apt-get install cmake
@@ -12,6 +16,10 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
 - Gcc  
 
         $ sudo apt-get install build-essential
+
+- Git
+
+        $ sudo apt-get install git
         
 ### Libreria xlnt para leer los archivos.
 

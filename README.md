@@ -6,9 +6,11 @@ Proyecto de paralela 2019
 Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de 64 bits y las herramientas usadas fueron
 
 - CMake
+
         $ sudo apt-get install cmake
         
 - Gcc  
+
         $ sudo apt-get install build-essential
         
 - Libreria xlnt
@@ -21,6 +23,7 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
         $ sudo ldconfig
         
 ### Instalacion libreria para escribir y crear hojas.
+
         $ sudo apt-get install -y zlib1g-dev
         $ git clone https://github.com/jmcnamara/libxlsxwriter.git
         $ cd libxlsxwriter

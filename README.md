@@ -1,12 +1,19 @@
 # Proyecto-Paralela
 Proyecto de paralela 2019
 
+
 ## Stack de Construcción
 Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de 64 bits y las herramientas usadas fueron
 
-- CMake (apt-get install cmake)
-- Gcc  (apt-get install build-essential)
-- xlnt ($ git clone https://github.com/tfussell/xlnt.git
+- CMake 
+        $ sudo apt-get install cmake
+        
+- Gcc  
+        $ sudo apt-get install build-essential
+        
+- Libreria xlnt
+
+        $ git clone https://github.com/tfussell/xlnt.git
         $ cd xlnt
         $ cmake .
         $ make -j 2

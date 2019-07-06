@@ -5,110 +5,11 @@
 #include <cstdlib>
 #include <string>
 #include <sstream>//convertir int to string
+#include <omp.h>
+// include "mpi.h"
 
 using namespace std;
 
-//Funcion para contar filas de los archivos.xlsx
-int contarFilas(char *argumento){
-    xlnt::workbook wb;
-    wb.load(argumento);
-    int contador = 0;
-    auto ws = wb.active_sheet();
-    for (auto row : ws.rows(false)) 
-    { 
-	contador = contador + 1;
-    }
-    return contador;
-}
-
-// Funcion materias repetidas
-void MateriasProfesor(char *argumento)
-{
-    xlnt::workbook wb;
-    wb.load(argumento);
-    int contador = 0;
-    auto ws = wb.active_sheet();
-
-	/* toda la hoja de cálculo */
-	std::vector< std::vector<std::string> > hoja_calculo;
-	std::vector< std::vector<std::string> > columna_c;
-	for (auto row : ws.rows(false)){ 
-
-		// Creando un vector nuevo solo para esta fila en la hoja de cálculo
-		vector<string> fila_simple;
-
-		for (auto cell : row){ 
-		    //Añadiendo esta celda a la fila;
-		    fila_simple.push_back(cell.to_string());
-		}
-
-		//Agregando esta fila completa al vector que almacena toda la hoja de cálculo;
-		hoja_calculo.push_back(fila_simple);
-        }
-
-    // Cantidad de materias que tiene un profesor
-	int contador_bloques = 0;
-    // Variable para ver si existe más de una vez el profesor
-    int existe = 0;
-    // Nombre del profesor
-    string nombre;
-    // id del profesor
-    int idNumero = 0;
-    // Arreglo con los id de cada profesor
-    int idNumeros[500];
-    // Variable auxiliar donde se guarda idNumero como string
-    string nombreNumero;
-    // Primer For para recorrer el archivo completo
-    for (int fila = 1; fila < hoja_calculo.size(); fila++){
-        contador_bloques = 0;
-        existe = 0;
-        // Se guarda nombre del profesor
-        nombre = hoja_calculo.at(fila).at(3);
-        // Se guarda idNumero como string
-        nombreNumero = hoja_calculo.at(fila).at(2);
-        // Se convierte idNumero a entero
-        idNumero = stoi(nombreNumero, nullptr);
-        // Se agrega el idNumero al arreglo de los id
-        idNumeros[fila] = idNumero;
-        // Se recorre idNumeros[] para saber si ya se conto la cantidad de materias
-        // Que tiene asignadas el profesor
-        for (int i = 0 ; i < 500; i++)
-        {
-            // Si existe el id en el arreglo, entonces existe++
-            if (idNumero == idNumeros[i+1])
-            {
-                //cout << "EXISTE ID: " << idNumeros[i] << endl;
-                existe++;
-            }
-        }
-        // Si no existe el id en el arreglo se cuenta cuantas veces se repite el id del profesor
-        // Para saber cuantas materias tiene asignadas
-        if (existe < 2)
-                {
-		    //cout << "No existe ID: " << endl;
-            // Se recorre Cursos.xlsx 
-	        for (int fila2 = 0; fila2 < hoja_calculo.size(); fila2++)
-	        {
-		      for (int columna2 = 0; columna2 < hoja_calculo.at(fila2).size(); columna2++)
-		      {
-
-		      }
-                // Se compara el nombre del profesor en el archivo
-	            if(nombre==(hoja_calculo.at(fila2).at(3)))
-                {
-                    // Se guarda la cantidad de veces que existe el nombre del profesor
-		            contador_bloques++;
-		        
-	            }
-	        }
-            // Muestra el numero de fila que aparece el profesor por primera vez
-	        cout << "NUMERO DE FILA" << fila << endl;
-            // Muestra el nombre del profesor y la cantidad de ramos
-            cout<<"Profesor: "<<nombre<<" , cantidad de ramos: "<<contador_bloques<<endl;
-        }
-    }
-
-}
 
 /*********************************************************/
 
@@ -122,6 +23,7 @@ typedef struct InfoSala {
     int codigoProfesor;
 } InfoSala;
 
+//Listo
 typedef struct Horario {
   //int dia;
   //int bloque;
@@ -143,23 +45,10 @@ typedef struct Ramos{
 //Listo
 typedef struct Profesor {
   int codigoProfesor;
-  //char nombreProfesor[30];
-  //int diasDisp[6];
-  //int prioridad;
   int diasBloques[7][6];
   int estado = 0;//0 aun quedan bloques
 } Profesor;
 
-//asignar los ramos con menor horas
-void prioridad(char *argumento){
-    int profes = 239;
-    while(profes != 0){
-        for (int i=0; i<239; i++ ){
-            // if(prioridad)
-
-        }
-    }
-}
 
 Profesor profes[239];
 void infoProfe(char *argumento){
@@ -186,8 +75,6 @@ void infoProfe(char *argumento){
     //excel docentes;
     int j=0;
     int k=0;
-    // int filaa[500];
-    // int columna[20];
     int cont = 0;
     int cont2 = 0;
     int auxxx=1;
@@ -297,6 +184,13 @@ void infoRamos(char *argumento){
         }
     // Ramos ramoss[346];
 
+    int thread; //inicializacion variable para diferenciar hilo mientra se paraleliza
+    #pragma omp parallel private(thread)
+     
+           {
+          thread = omp_get_thread_num();
+           #pragma omp for
+           
     for (int fila = 1; fila < hoja_calculo.size(); fila++){
         string cRamo = hoja_calculo.at(fila).at(0);
         char cstr[cRamo.size() + 1];
@@ -312,6 +206,7 @@ void infoRamos(char *argumento){
         // cout << "CodProfe: " << ramoss[fila].codigoProfesor << endl;
         // cout << "HoraRamos: " << ramoss[fila].horasRamo << endl;
     }  
+           }
 }
 
 InfoSala salass[54];
@@ -341,6 +236,12 @@ void infoSalas(char *argumento){
     }
     //InfoSala salass[54];
 
+    int thread; //inicializacion variable para diferenciar hilo mientra se paraleliza
+    #pragma omp parallel private(thread)
+     
+           {
+          thread = omp_get_thread_num();
+           #pragma omp for
     for (int fila = 1; fila < hoja_sala.size(); fila++){
 
         string eSala = hoja_sala.at(fila).at(0);
@@ -368,6 +269,7 @@ void infoSalas(char *argumento){
         }
         //cout << "Edificio:"<< salass[fila].nombreEdificio << " " <<"NumSala: " << salass[fila].numeroSala<< " "<<"Lab?: "<<salass[fila].lab<< endl;
     }
+           }
 }
 
 Horario block[54];
@@ -395,9 +297,11 @@ void asignarHorario(){
             strcpy(qSala, queSala.c_str());
             strcpy(block[sal].sala, qSala);
             //cout << "Sala: " << queSala << endl;
+            //Comprueba si la sala es un lab (se asignan primero las clases en los labs)
             if (queSala=="LAB-1" || queSala=="LAB-2" || queSala=="LAB-3" || queSala=="LAB-4" || queSala=="LAB-5" || queSala=="LAB-6"){
                 //cout << "Sala: " << queSala << endl;
                 for (int c=1; c<347;c++){
+                    //Se asignan primero los ramos que tengan 6
                     if(ramoss[c].codigoRamo[0]=='I' && ramoss[c].codigoRamo[1]=='N' && ramoss[c].codigoRamo[2]=='F' && ramoss[c].horasRamo==6){
                         //cout << "Codigo INF" << endl;
                         //cout << ramoss[c].codigoRamo[0]<< ramoss[c].codigoRamo[1]<< ramoss[c].codigoRamo[2] << endl;
@@ -431,12 +335,6 @@ void asignarHorario(){
                             }
                             }
                         }
-                        //cout << "Fila: " <<  c << endl;
-                        
-                    // for (int i=0; i<8; i++){
-                    //     for (int j=0; j<7; j++){
-                    //     }
-                    // }
                     } else if (ramoss[c].codigoRamo[0]=='I' && ramoss[c].codigoRamo[1]=='N' && ramoss[c].codigoRamo[2]=='F' && ramoss[c].horasRamo==1){
                         //cout << "Sala: " << queSala << endl;
                         for(int z = 0; z<239;z++){
@@ -475,6 +373,7 @@ void asignarHorario(){
             } else { // FUNCION PARA LAS SALAS QUE NO SON LABS
                 //cout << "Sala: " << queSala << endl;
                 for (int c=1; c<347;c++){
+                    //Se comprueba que no sea un lab
                     if((ramoss[c].codigoRamo[0]!='I' || ramoss[c].codigoRamo[1]!='N' || ramoss[c].codigoRamo[2]!='F') && ramoss[c].horasRamo==6){
                         //cout << "Codigo INF" << endl;
                         //cout << ramoss[c].codigoRamo[0]<< ramoss[c].codigoRamo[1]<< ramoss[c].codigoRamo[2] << endl;
@@ -507,12 +406,6 @@ void asignarHorario(){
                                 }}
                             }
                         }
-                        //cout << "Fila: " <<  c << endl;
-                        
-                    // for (int i=0; i<8; i++){
-                    //     for (int j=0; j<7; j++){
-                    //     }
-                    // }
                     } else if ((ramoss[c].codigoRamo[0]!='I' || ramoss[c].codigoRamo[1]!='N' || ramoss[c].codigoRamo[2]!='F') && ramoss[c].horasRamo==4){
                         //cout << "Sala: " << queSala << endl;
                         for(int z = 0; z<239;z++){
@@ -544,7 +437,6 @@ void asignarHorario(){
                                 }
                             }
                         }
-                        //cout << "Fila: " <<  c << endl;
                         
                     } else if ((ramoss[c].codigoRamo[0]!='I' || ramoss[c].codigoRamo[1]!='N' || ramoss[c].codigoRamo[2]!='F') && ramoss[c].horasRamo==1){
                         //cout << "Sala: " << queSala << endl;
@@ -576,14 +468,13 @@ void asignarHorario(){
                                 }}
                             }
                         }
-                        //cout << "Fila: " <<  c << endl;
                     }
                 }
             }
         //}
     }
 
-////////////////////////////////////////////////////////////////
+/***********************************************************/
     //Ramos no asignados en el primer algoritmo
     for(int c=1; c<347;c++){
         if(ramoss[c].estado==0){
@@ -623,9 +514,7 @@ void asignarHorario(){
                             }
                         }
 
-                            }}
-
-                    // }   
+                            }}  
                 }
             } else if(ramoss[c].horasRamo>0){
                 for(int sal=53;sal>0;sal--){
@@ -663,7 +552,6 @@ void asignarHorario(){
                         }
 
                             }}
-  
                 }
             }
         }
@@ -673,24 +561,32 @@ void asignarHorario(){
     int cant=0;
     int noCant=0;
     std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
+    int thread; //inicializacion variable para diferenciar hilo mientra se paraleliza
+    #pragma omp parallel private(thread)
+     
+           {
+          thread = omp_get_thread_num();
+           #pragma omp for
+           
     for (int c=1; c<347;c++){
         if(ramoss[c].estado==1){
             cant++;
         } else if(ramoss[c].estado==0){
             noCant++;
         }
-        cout <<"Codigo ramo: " << ramoss[c].codigoRamo <<" Estado ramo: " <<  ramoss[c].estado << endl;
-    }
+        //cout <<"Codigo ramo: " << ramoss[c].codigoRamo <<" Estado ramo: " <<  ramoss[c].estado << endl;
+    }}
     std::cout << "Cantidad de RAMOS asignados: " <<  cant << endl;
     std::cout << "Cantidad de RAMOS NO asignados: " <<  noCant << endl;
-    std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
+    //std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
 }
 
 void crear_hojas(){
+
+
     char buffer[500]; //Variable para almacenar nombre de edificio y hoja convertidos a char
     lxw_workbook  *workbook  = workbook_new("Horario.xlsx"); //Crear libro de trabajo con el nombre "Horario"
 
-    //Escribimos el edificio + numero de sala en cada hoja
     for (int i = 1; i<54; i++){ // 54 es la cantidas de salas
         //strcpy(buffer,block[i].sala.c_str()); //Convierte variable string edificio_y_numSala a char
         lxw_worksheet *worksheet = workbook_add_worksheet(workbook, block[i].sala); //Escribe el nombre en cada hoja
@@ -721,8 +617,8 @@ void crear_hojas(){
                 worksheet_write_string(worksheet, f+1, j+1, buffer_bloque, NULL);
             }
         }
+    }         
 
-    }
     workbook_close(workbook);
 }
 

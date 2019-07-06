@@ -21,7 +21,7 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
 
         $ sudo apt-get install git
         
-### Libreria xlnt para leer los archivos.
+### Instalar libreria xlnt para leer los archivos.
 
         $ git clone https://github.com/tfussell/xlnt.git
         $ cd xlnt
@@ -30,7 +30,7 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
         $ sudo make install
         $ sudo ldconfig
         
-### Libreria libxlsxwriter para escribir y crear hojas.
+### Instalar libreria libxlsxwriter para escribir y crear hojas.
 
         $ sudo apt-get install -y zlib1g-dev
         $ git clone https://github.com/jmcnamara/libxlsxwriter.git
@@ -41,6 +41,10 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
         $ curl -O -L  http://www.zlib.net/zlib-1.2.11.tar.gz
         $ tar zxf zlib-1.2.11.tar.gz
         $ sudo apt-get install -y python-pytest
+        
+### Instalar OpenMP y OpenMPI
+
+        $ sudo apt-get install openmpi-bin openssh-client openssh-server libopenmpi-dbg libopenmpi-dev
         
 ### Para que ambas librerias funcionen, se tienen que combinar las carpetas xlnt y libxlsxwriter...
 

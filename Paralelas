@@ -16,8 +16,8 @@ int contarFilas(char *argumento){
     wb.load(argumento);
     int contador = 0;
     auto ws = wb.active_sheet();
-    for (auto row : ws.rows(false)) 
-    { 
+    for (auto row : ws.rows(false))
+    {
 	contador = contador + 1;
     }
     return contador;
@@ -34,12 +34,12 @@ void MateriasProfesor(char *argumento)
 	/* toda la hoja de cálculo */
 	std::vector< std::vector<std::string> > hoja_calculo;
 	std::vector< std::vector<std::string> > columna_c;
-	for (auto row : ws.rows(false)){ 
+	for (auto row : ws.rows(false)){
 
 		// Creando un vector nuevo solo para esta fila en la hoja de cálculo
 		vector<string> fila_simple;
 
-		for (auto cell : row){ 
+		for (auto cell : row){
 		    //Añadiendo esta celda a la fila;
 		    fila_simple.push_back(cell.to_string());
 		}
@@ -88,7 +88,7 @@ void MateriasProfesor(char *argumento)
         if (existe < 2)
                 {
 		    //cout << "No existe ID: " << endl;
-            // Se recorre Cursos.xlsx 
+            // Se recorre Cursos.xlsx
 	        for (int fila2 = 0; fila2 < hoja_calculo.size(); fila2++)
 	        {
 		      for (int columna2 = 0; columna2 < hoja_calculo.at(fila2).size(); columna2++)
@@ -100,7 +100,7 @@ void MateriasProfesor(char *argumento)
                 {
                     // Se guarda la cantidad de veces que existe el nombre del profesor
 		            contador_bloques++;
-		        
+
 	            }
 	        }
             // Muestra el numero de fila que aparece el profesor por primera vez
@@ -172,7 +172,7 @@ void infoProfe(char *argumento){
 	/* toda la hoja de cálculo */
 	std::vector< std::vector<std::string> > hoja_calculo;
 	// std::vector< std::vector<std::string> > columna_c;
-        for(const auto sheet : wb){ 
+        for(const auto sheet : wb){
             for(auto row : sheet.rows()){
                 vector<string> filas;
                 for(auto cell : row){
@@ -270,9 +270,9 @@ void infoProfe(char *argumento){
             cont2++;
             //profes[fila].estado = 1; // bloques y codigo cargado
         }
-    }   
+    }
     std::cout << "FIN Docentes.xlsx" << endl;
-}   
+}
 
 Ramos ramoss[346];
 void infoRamos(char *argumento){
@@ -284,12 +284,12 @@ void infoRamos(char *argumento){
 	/* toda la hoja de cálculo */
 	std::vector< std::vector<std::string> > hoja_calculo;
 	std::vector< std::vector<std::string> > columna_c;
-	for (auto row : ws.rows(false)){ 
+	for (auto row : ws.rows(false)){
 
 		// Creando un vector nuevo solo para esta fila en la hoja de cálculo
 		vector<string> fila_simple;
 
-		for (auto cell : row){ 
+		for (auto cell : row){
 		    //Añadiendo esta celda a la fila;
 		    fila_simple.push_back(cell.to_string());
 		}
@@ -313,7 +313,7 @@ void infoRamos(char *argumento){
         // cout << "CodRamo: " << ramoss[fila].codigoRamo << endl;
         // cout << "CodProfe: " << ramoss[fila].codigoProfesor << endl;
         // cout << "HoraRamos: " << ramoss[fila].horasRamo << endl;
-    }  
+    }
 }
 
 InfoSala salass[54];
@@ -354,7 +354,7 @@ void infoSalas(char *argumento){
         char num[numSala.size() + 1];
 	    strcpy(num, numSala.c_str());
         strcpy(salass[fila].numeroSala, num);// nombre sala
-        
+
         string completSala = eSala + "-" + numSala;
         char comSala[completSala.size() + 1];
         strcpy(comSala, completSala.c_str());
@@ -406,7 +406,7 @@ void asignarHorario(){
                         for(int z = 0; z<239;z++){
                             //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
-                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             for (int dia=0;dia<6;dia++){
                                 for (int bloque=0;bloque<7;bloque++){
                                     if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0 && block[sal].restBlock[dia]>0)){
@@ -434,7 +434,7 @@ void asignarHorario(){
                             }
                         }
                         //cout << "Fila: " <<  c << endl;
-                        
+
                     // for (int i=0; i<8; i++){
                     //     for (int j=0; j<7; j++){
                     //     }
@@ -444,7 +444,7 @@ void asignarHorario(){
                         for(int z = 0; z<239;z++){
                             //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
-                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             for (int dia=0;dia<6;dia++){
                                 for (int bloque=0;bloque<7;bloque++){
                                     if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0 && block[sal].restBlock[dia]>0)){
@@ -471,7 +471,7 @@ void asignarHorario(){
                             }
                         }
                         //cout << "Fila: " <<  c << endl;
-                        
+
                     }
                 }
             } else { // FUNCION PARA LAS SALAS QUE NO SON LABS
@@ -483,7 +483,7 @@ void asignarHorario(){
                         for(int z = 0; z<239;z++){
                             //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
-                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             for (int dia=0;dia<6;dia++){
                                 for (int bloque=0;bloque<7;bloque++){
                                     if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0 && block[sal].restBlock[dia]>0)){
@@ -510,7 +510,7 @@ void asignarHorario(){
                             }
                         }
                         //cout << "Fila: " <<  c << endl;
-                        
+
                     // for (int i=0; i<8; i++){
                     //     for (int j=0; j<7; j++){
                     //     }
@@ -520,7 +520,7 @@ void asignarHorario(){
                         for(int z = 0; z<239;z++){
                             //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
-                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             for (int dia=0;dia<6;dia++){
                                 for (int bloque=0;bloque<7;bloque++){
                                     if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0 && block[sal].restBlock[dia]>0)){
@@ -547,13 +547,13 @@ void asignarHorario(){
                             }
                         }
                         //cout << "Fila: " <<  c << endl;
-                        
+
                     } else if ((ramoss[c].codigoRamo[0]!='I' || ramoss[c].codigoRamo[1]!='N' || ramoss[c].codigoRamo[2]!='F') && ramoss[c].horasRamo==1){
                         //cout << "Sala: " << queSala << endl;
                         for(int z = 0; z<239;z++){
                             //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
-                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
+                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             for (int dia=0;dia<6;dia++){
                                 for (int bloque=0;bloque<7;bloque++){
                                     if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0 && block[sal].restBlock[dia]>0)){
@@ -599,7 +599,7 @@ void asignarHorario(){
                         for(int z = 0; z<239;z++){
                             //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
-                        
+
                         for (int dia=0;dia<6;dia++){
                             for (int bloque=0;bloque<7;bloque++){
                                 if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0 && block[sal].restBlock[dia]>0)){
@@ -627,7 +627,7 @@ void asignarHorario(){
 
                             }}
 
-                    // }   
+                    // }
                 }
             } else if(ramoss[c].horasRamo>0){
                 for(int sal=53;sal>0;sal--){
@@ -638,7 +638,7 @@ void asignarHorario(){
                         for(int z = 0; z<239;z++){
                             //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
-                        
+
                         for (int dia=0;dia<6;dia++){
                             for (int bloque=0;bloque<7;bloque++){
                                 if(profes[z].diasBloques[bloque][dia] == 0 && block[sal].bloque[bloque][dia]=="0"  && (ramoss[c].horasRamo>0 && block[sal].restBlock[dia]>0)){
@@ -665,7 +665,7 @@ void asignarHorario(){
                         }
 
                             }}
-  
+
                 }
             }
         }
@@ -690,7 +690,7 @@ void asignarHorario(){
 
 void crear_hojas(){
 
-        int Procesos,Procesador;
+  int Procesos,Procesador;
 
 	/*Comienza las llamadas a MPI*/
 	MPI_Init(NULL, NULL);
@@ -707,47 +707,49 @@ void crear_hojas(){
     char buffer[500]; //Variable para almacenar nombre de edificio y hoja convertidos a char
     lxw_workbook  *workbook  = workbook_new("Horario.xlsx"); //Crear libro de trabajo con el nombre "Horario"
 
-    //Escribimos el edificio + numero de sala en cada hoja
-    for (int i = 1; i<54; i++){ // 54 es la cantidas de salas
-        //strcpy(buffer,block[i].sala.c_str()); //Convierte variable string edificio_y_numSala a char
-        lxw_worksheet *worksheet = workbook_add_worksheet(workbook, block[i].sala); //Escribe el nombre en cada hoja
+    /*Se define una región a paralelizar*/
+          #pragma omp parallel
+           {
+           #pragma omp for
 
-        // Escribir bloques en cada hoja de sala
-        string cadena_bloques[8] = {"Bloques","08:00-09:30","09:40-11:10","11:20-12:50","13:00-14:30","14:40-16:10","16:20-17:50","18:00-19:30"};
-        char buffer_bloques[500]; //Variable para almacenar los bloques convertidos a char
-    	    for (int c = 0; c<8; c++){ // Recorre cadena de bloques
-            strcpy(buffer_bloques,cadena_bloques[c].c_str()); //Convierte la cadena de String a char
-      	    worksheet_write_string(worksheet,c, 0, buffer_bloques, NULL); //Escribe los bloques en la columa 0 de la hoja
-      	    worksheet_set_column(worksheet, c, 0, 12, NULL); //Ajustar ancho de la columna de bloques
-    	    }
+                  //Escribimos el edificio + numero de sala en cada hoja
+                  for (int i = 1; i<54; i++){ // 54 es la cantidas de salas
+                      //strcpy(buffer,block[i].sala.c_str()); //Convierte variable string edificio_y_numSala a char
+                      lxw_worksheet *worksheet = workbook_add_worksheet(workbook, block[i].sala); //Escribe el nombre en cada hoja
 
-           // Escribir dias del horario en cada hoja de sala
-    	   string cadena[7] = {"Bloques","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"}; //Cadena con los dias del horario
-    	   char buffer_cadena[500]; //Variable para almacenar los dias convertidos a char
-    	   for (int p = 0; p<7; p++){ //Recorre cadena con los dias
-     	       //cout << cadena[p] << endl;	
-      	       strcpy(buffer_cadena,cadena[p].c_str()); //Convierte la cadena de String a char
-      	       worksheet_write_string(worksheet, 0, p, buffer_cadena, NULL); //Escribe los dias en la fila 0 de hoja
-    	   }
+                      // Escribir bloques en cada hoja de sala
+                      string cadena_bloques[8] = {"Bloques","08:00-09:30","09:40-11:10","11:20-12:50","13:00-14:30","14:40-16:10","16:20-17:50","18:00-19:30"};
+                      char buffer_bloques[500]; //Variable para almacenar los bloques convertidos a char
+                  	    for (int c = 0; c<8; c++){ // Recorre cadena de bloques
+                          strcpy(buffer_bloques,cadena_bloques[c].c_str()); //Convierte la cadena de String a char
+                    	    worksheet_write_string(worksheet,c, 0, buffer_bloques, NULL); //Escribe los bloques en la columa 0 de la hoja
+                    	    worksheet_set_column(worksheet, c, 0, 12, NULL); //Ajustar ancho de la columna de bloques
+                  	    }
 
-	/*Se define una región a paralelizar*/
-        #pragma omp parallel
-         {
-         #pragma omp for
+                         // Escribir dias del horario en cada hoja de sala
+                  	   string cadena[7] = {"Bloques","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"}; //Cadena con los dias del horario
+                  	   char buffer_cadena[500]; //Variable para almacenar los dias convertidos a char
+                  	   for (int p = 0; p<7; p++){ //Recorre cadena con los dias
+                   	       //cout << cadena[p] << endl;
+                    	       strcpy(buffer_cadena,cadena[p].c_str()); //Convierte la cadena de String a char
+                    	       worksheet_write_string(worksheet, 0, p, buffer_cadena, NULL); //Escribe los dias en la fila 0 de hoja
+                  	   }
 
-		//Escribir bloques en el horario
-		for(int f=0; f<7; f++){//Bloques
-		    for(int j=0; j<6; j++){//Dias
-		        char buffer_bloque[500];
-		        strcpy(buffer_bloque,block[i].bloque[f][j].c_str());
-		        worksheet_write_string(worksheet, f+1, j+1, buffer_bloque, NULL);
-		    }
-		}
-	}
-	MPI_Finalize();
 
-    }
-    workbook_close(workbook);
+
+              		//Escribir bloques en el horario
+              		for(int f=0; f<7; f++){//Bloques
+              		    for(int j=0; j<6; j++){//Dias
+              		        char buffer_bloque[500];
+              		        strcpy(buffer_bloque,block[i].bloque[f][j].c_str());
+              		        worksheet_write_string(worksheet, f+1, j+1, buffer_bloque, NULL);
+              		    }
+              		}
+              	}
+        }
+
+        MPI_Finalize();
+        workbook_close(workbook);
 }
 
 
@@ -761,7 +763,7 @@ int main( int argc, char *argv[])
     //Variable para guardar el argumento
     string argumento;
 
-    
+
     //Leyendo los argumentos por argumentos
     for (int i = 0; i < argc; i++)
     {
@@ -789,4 +791,3 @@ int main( int argc, char *argv[])
     crear_hojas();
     return 0;
 }
-

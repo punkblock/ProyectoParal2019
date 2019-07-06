@@ -42,17 +42,24 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
         $ tar zxf zlib-1.2.11.tar.gz
         $ sudo apt-get install -y python-pytest
         
-### Instalar OpenMP y OpenMPI
+### Instalar OpenMP 
 
-        $ sudo apt-get install openmpi-bin openssh-client openssh-server libopenmpi-dbg libopenmpi-dev
+        $ sudo apt-get install libomp-dev
         
 ### Para que ambas librerias funcionen, se tienen que combinar las carpetas xlnt y libxlsxwriter...
 
-### Compilar/Ejecutar
-Para compilar y ejecutar el proyecto:
+### Compilar y Ejecutar el programa:
 
         Compilar con:
         $ g++ main.cpp -o tarea -std=c++14 -lxlsxwriter -Ixlnt/include -lxlnt
         
         Ejecutar con:
         $ ./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx
+        
+### Compilar y Ejecutar el programa con OpenMP:
+
+        Compilar con:
+        $ mpic++ main.cpp -o tarea -lxlsxwriter -lxlnt -fopenmp
+        
+        Ejecutar con:
+        $ mpirun --hostfile hostfile.txt -np 2 ./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx

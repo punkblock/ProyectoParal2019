@@ -26,8 +26,6 @@ typedef struct InfoSala {
 
 //Listo
 typedef struct Horario {
-  //int dia;
-  //int bloque;
   string bloque[7][6];
   char codigoRamo[20];
   int codigoProfesor;
@@ -63,21 +61,16 @@ void infoProfe(char *argumento){
 
 	/* toda la hoja de cálculo */
 	std::vector< std::vector<std::string> > hoja_calculo;
-	// std::vector< std::vector<std::string> > columna_c;
         for(const auto sheet : wb){ 
             for(auto row : sheet.rows()){
                 vector<string> filas;
                 for(auto cell : row){
-                    //cout << cell << ", ";
                     filas.push_back(cell.to_string());
                 }
                 hoja_calculo.push_back(filas);
-                //cout <<endl;
             }
         }
 
-    // Profesor profes[239];
-    //excel docentes;
     int j=0;
     int k=0;
     int cont = 0;
@@ -89,30 +82,20 @@ void infoProfe(char *argumento){
     string noDisp;
     string bloquee;
     for  (int fila = 1; fila < hoja_calculo.size(); fila++){
-        //std::cout << hoja_calculo.at(fila).at(0) << endl;
-        //std::cout  << "Fila : " << fila<< endl;
         if(fila == 240 || fila == 480 || fila == 720 || fila == 960 || fila == 1200){
-            //std::cout << endl << "Fin Hoja : " << hoja << endl << endl;
-            //std::cout << hoja_calculo.at(fila).at(0) << endl;
             hoja++;
             cont=0;
             cont2=0;
             k++;//dia
         }else{
-            // if(fila == 1439){
-                 //std::cout << endl << "Fin Hoja : " << hoja << endl << endl;
-            // }
             if(cont<239){
                 int codProfe = std::atoi (hoja_calculo.at(fila).at(0).c_str());
                 profes[cont].codigoProfesor = codProfe;//guarda codProfe
-                //std::cout << "Cod Profe: " << profes[cont].codigoProfesor << endl << endl;
                 //cuenta profesores (desde 1 a 240)
                 cont++;
             }
-                // cout << "Fila N: " << cont << endl;
             if(fila<1201){
                 j=0;//bloque
-                // std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
                 for (int z=3; z<10; z++){//z: columnas
                     disp = "DISPONIBLE";
                     noDisp = "NO DISPONIBLE";
@@ -127,14 +110,11 @@ void infoProfe(char *argumento){
                     if(cont2<239){
                         profes[cont2].diasBloques[j][k] = dsp; //z desde 4 a 10 excepto dia sabado
                     }
-                    // std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
-                    // std::cout << "Bloquelibre: " << j << k << ": " << profes[cont2].diasBloques[j][k] << endl;
                     j++;
                 }
             }
             if(fila>1200){
                 j=0;//bloque
-                 //std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
                 for (int z=3; z<7; z++){//z: columnas
                     disp = "DISPONIBLE";
                     noDisp = "NO DISPONIBLE";
@@ -152,8 +132,6 @@ void infoProfe(char *argumento){
                         profes[cont2].diasBloques[5][5] = 2;
                         profes[cont2].diasBloques[6][5] = 2;
                     }
-                    // std::cout << "CodProfe: " << profes[cont2].codigoProfesor << endl;
-                    //std::cout << "Bloquelibre: " << j << k << ": " << profes[cont2].diasBloques[j][k] << endl;
                     j++;
                 }
             }
@@ -187,7 +165,6 @@ void infoRamos(char *argumento){
 		//Agregando esta fila completa al vector que almacena toda la hoja de cálculo;
 		hoja_calculo.push_back(fila_simple);
         }
-    // Ramos ramoss[346];
 
     int thread; //inicializacion variable para diferenciar hilo mientra se paraleliza
     #pragma omp parallel private(thread)
@@ -201,29 +178,21 @@ void infoRamos(char *argumento){
         char cstr[cRamo.size() + 1];
 	    strcpy(cstr, cRamo.c_str());
         strcpy(ramoss[fila].codigoRamo, cstr);// codigo ramo
+	    
         int codProfe = std::atoi (hoja_calculo.at(fila).at(2).c_str());
         ramoss[fila].codigoProfesor = codProfe;
+	    
         int horRamo = std::atoi (hoja_calculo.at(fila).at(5).c_str());
         ramoss[fila].horasRamo = horRamo;
 
-        // cout << "Fila: " << fila << endl;
-        // cout << "CodRamo: " << ramoss[fila].codigoRamo << endl;
-        // cout << "CodProfe: " << ramoss[fila].codigoProfesor << endl;
-        // cout << "HoraRamos: " << ramoss[fila].horasRamo << endl;
     }  
            }
 }
 
 InfoSala salass[54];
 void infoSalas(char *argumento){
-      int cont2= 0;
-      string tipo;
-      string tSala;
-      int tLab=0;
-      int j;
       string lab="LAB";
       string esLab;
-
       xlnt::workbook wb;
       wb.load(argumento);// Salas.xlsx
       auto ws = wb.active_sheet();
@@ -239,7 +208,6 @@ void infoSalas(char *argumento){
             hoja_sala.push_back(filas);
         }
     }
-    //InfoSala salass[54];
 
     int thread; //inicializacion variable para diferenciar hilo mientra se paraleliza
     #pragma omp parallel private(thread)
@@ -265,14 +233,12 @@ void infoSalas(char *argumento){
         strcpy(salass[fila].sala, comSala);
 
         esLab=hoja_sala.at(fila).at(0);
-        //cout<< esLab << "==" << lab << endl << endl;
         if (lab== esLab){
             salass[fila].lab = 1;//Si es lab
         }
         if (lab!= esLab){
             salass[fila].lab = 0;//No es lab
         }
-        //cout << "Edificio:"<< salass[fila].nombreEdificio << " " <<"NumSala: " << salass[fila].numeroSala<< " "<<"Lab?: "<<salass[fila].lab<< endl;
     }
            }
 }
@@ -282,7 +248,6 @@ void asignarHorario(){
     int cantINF=0;
     int cantProf=0;
     int dia = 0;
-    // string queSala;
 
     //Se vacia el horario
     for(int sal=1;sal<54;sal++){
@@ -295,8 +260,6 @@ void asignarHorario(){
     }
 
     for(int sal=1;sal<54;sal++){
-    // for(int sal=53;sal>0;sal--){
-        //if (salass[sal].nombreEdificio[0]=='L'){
             string queSala(salass[sal].sala);
             char qSala[queSala.size() + 1];
             strcpy(qSala, queSala.c_str());
@@ -309,7 +272,6 @@ void asignarHorario(){
                     //Se asignan primero los ramos que tengan 6
                     if(ramoss[c].codigoRamo[0]=='I' && ramoss[c].codigoRamo[1]=='N' && ramoss[c].codigoRamo[2]=='F' && ramoss[c].horasRamo==6){
                         //cout << "Codigo INF" << endl;
-                        //cout << ramoss[c].codigoRamo[0]<< ramoss[c].codigoRamo[1]<< ramoss[c].codigoRamo[2] << endl;
                         for(int z = 0; z<239;z++){
                             //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
@@ -358,8 +320,6 @@ void asignarHorario(){
                                         string codProCur = codCurso + "-" + codProfee;
                                         //cout << codProCur <<endl;
                                         block[sal].bloque[bloque][dia]=codProCur;
-                                        //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
-                                        //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
                                         profes[z].diasBloques[bloque][dia] = 1;
                                         ramoss[c].horasRamo = ramoss[c].horasRamo -1;
                                         cantINF++;
@@ -368,11 +328,10 @@ void asignarHorario(){
                                             ramoss[c].estado=1;
                                         }
                                     }
-                                }}
+                                }
+			      }
                             }
-                        }
-                        //cout << "Fila: " <<  c << endl;
-                        
+                        }                        
                     }
                 }
             } else { // FUNCION PARA LAS SALAS QUE NO SON LABS
@@ -381,9 +340,7 @@ void asignarHorario(){
                     //Se comprueba que no sea un lab
                     if((ramoss[c].codigoRamo[0]!='I' || ramoss[c].codigoRamo[1]!='N' || ramoss[c].codigoRamo[2]!='F') && ramoss[c].horasRamo==6){
                         //cout << "Codigo INF" << endl;
-                        //cout << ramoss[c].codigoRamo[0]<< ramoss[c].codigoRamo[1]<< ramoss[c].codigoRamo[2] << endl;
                         for(int z = 0; z<239;z++){
-                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
                             //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl; 
                             for (int dia=0;dia<6;dia++){
@@ -399,7 +356,6 @@ void asignarHorario(){
                                         //cout << codProCur <<endl;
                                         block[sal].bloque[bloque][dia]=codProCur;
                                         //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
-                                        //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
                                         profes[z].diasBloques[bloque][dia] = 1;
                                         ramoss[c].horasRamo = ramoss[c].horasRamo -2;
                                         cantINF++;
@@ -489,9 +445,7 @@ void asignarHorario(){
                 char qSala[queSala.size() + 1];
                 strcpy(qSala, queSala.c_str());
                 strcpy(block[sal].sala, qSala);
-                    // if (queSala=="LAB-1" || queSala=="LAB-2" || queSala=="LAB-3" || queSala=="LAB-4" || queSala=="LAB-5" || queSala=="LAB-6"){
                         for(int z = 0; z<239;z++){
-                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
                         
                         for (int dia=0;dia<6;dia++){
@@ -506,8 +460,6 @@ void asignarHorario(){
                                     string codProCur = codCurso + "-" + codProfee;
                                     //cout << codProCur <<endl;
                                     block[sal].bloque[bloque][dia]=codProCur;
-                                    //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
-                                    //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
                                     profes[z].diasBloques[bloque][dia] = 1;
                                     ramoss[c].horasRamo = ramoss[c].horasRamo -2;
                                     cantINF++;
@@ -528,7 +480,6 @@ void asignarHorario(){
                 strcpy(qSala, queSala.c_str());
                 strcpy(block[sal].sala, qSala);
                         for(int z = 0; z<239;z++){
-                            //std::cout << "CodProfe: " << profes[z].codigoProfesor << endl;
                             if(ramoss[c].codigoProfesor == profes[z].codigoProfesor){
                         
                         for (int dia=0;dia<6;dia++){
@@ -543,8 +494,6 @@ void asignarHorario(){
                                     string codProCur = codCurso + "-" + codProfee;
                                     //cout << codProCur <<endl;
                                     block[sal].bloque[bloque][dia]=codProCur;
-                                    //std::cout << "Horario: " << bloque << dia << ": " << block[sal].bloque[bloque][dia] << endl;
-                                    //block[sal].bloque[bloque][dia]=profes[z].codigoProfesor;
                                     profes[z].diasBloques[bloque][dia] = 1;
                                     ramoss[c].horasRamo = ramoss[c].horasRamo -2;
                                     cantINF++;
@@ -579,11 +528,9 @@ void asignarHorario(){
         } else if(ramoss[c].estado==0){
             noCant++;
         }
-        //cout <<"Codigo ramo: " << ramoss[c].codigoRamo <<" Estado ramo: " <<  ramoss[c].estado << endl;
     }}
     std::cout << "Cantidad de RAMOS asignados: " <<  cant << endl;
     std::cout << "Cantidad de RAMOS NO asignados: " <<  noCant << endl;
-    //std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
 }
 
 // FUNCION PARA ESCRITURA Y SALIDA DE ARCHIVO
@@ -595,7 +542,6 @@ void crear_hojas(){
     lxw_workbook  *workbook  = workbook_new("Horario.xlsx"); //Crear libro de trabajo con el nombre "Horario"
 
     for (int i = 1; i<54; i++){ // 54 es la cantidas de salas
-        //strcpy(buffer,block[i].sala.c_str()); //Convierte variable string edificio_y_numSala a char
         lxw_worksheet *worksheet = workbook_add_worksheet(workbook, block[i].sala); //Escribe el nombre en cada hoja
 
         // Escribir bloques en cada hoja de sala

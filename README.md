@@ -20,6 +20,10 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
 - Git
 
         $ sudo apt-get install git
+   
+- Curl
+
+        $ sudo apt-get install curl
         
 ### Instalar libreria xlnt para leer los archivos.
 
@@ -62,4 +66,5 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
         $ mpic++ main.cpp -o tarea -lxlsxwriter -lxlnt -fopenmp
         
         Ejecutar con:
-        $ mpirun --hostfile hostfile.txt -np 2 ./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx
+        $ mpirun --hostfile hostfile.txt -np n ./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx
+        

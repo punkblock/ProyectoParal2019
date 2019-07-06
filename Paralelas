@@ -690,65 +690,56 @@ void asignarHorario(){
 
 void crear_hojas(){
 
-  int Procesos,Procesador;
 
-	/*Comienza las llamadas a MPI*/
-	MPI_Init(NULL, NULL);
-
-	/*Averiguamos el número de procesos que están ejecutando nuestro programa*/
-	MPI_Comm_size(MPI_COMM_WORLD, &Procesos);
-
-	/*Averiguamos el rango de nuestro proceso*/
-	MPI_Comm_rank(MPI_COMM_WORLD, &Procesador);
-
-	/*Nos devuelve la cantidad de hilos, en este caso cantidad de procesos*/
-        omp_set_num_threads(Procesos);
+   int thread; //inicializacion variable para diferenciar hilo mientra se paraleliza
 
     char buffer[500]; //Variable para almacenar nombre de edificio y hoja convertidos a char
     lxw_workbook  *workbook  = workbook_new("Horario.xlsx"); //Crear libro de trabajo con el nombre "Horario"
 
     /*Se define una región a paralelizar*/
-          #pragma omp parallel
+          #pragma omp parallel private(thread)
            {
+          thread = omp_get_thread_num();
            #pragma omp for
 
-                  //Escribimos el edificio + numero de sala en cada hoja
-                  for (int i = 1; i<54; i++){ // 54 es la cantidas de salas
-                      //strcpy(buffer,block[i].sala.c_str()); //Convierte variable string edificio_y_numSala a char
-                      lxw_worksheet *worksheet = workbook_add_worksheet(workbook, block[i].sala); //Escribe el nombre en cada hoja
+                //Escribimos el edificio + numero de sala en cada hoja
+                for (int i = 1; i<54; i++){ // 54 es la cantidas de salas
+                    //strcpy(buffer,block[i].sala.c_str()); //Convierte variable string edificio_y_numSala a char
+                    lxw_worksheet *worksheet = workbook_add_worksheet(workbook, block[i].sala); //Escribe el nombre en cada hoja
 
-                      // Escribir bloques en cada hoja de sala
-                      string cadena_bloques[8] = {"Bloques","08:00-09:30","09:40-11:10","11:20-12:50","13:00-14:30","14:40-16:10","16:20-17:50","18:00-19:30"};
-                      char buffer_bloques[500]; //Variable para almacenar los bloques convertidos a char
-                  	    for (int c = 0; c<8; c++){ // Recorre cadena de bloques
-                          strcpy(buffer_bloques,cadena_bloques[c].c_str()); //Convierte la cadena de String a char
-                    	    worksheet_write_string(worksheet,c, 0, buffer_bloques, NULL); //Escribe los bloques en la columa 0 de la hoja
-                    	    worksheet_set_column(worksheet, c, 0, 12, NULL); //Ajustar ancho de la columna de bloques
-                  	    }
+                    // Escribir bloques en cada hoja de sala
+                    string cadena_bloques[8] = {"Bloques","08:00-09:30","09:40-11:10","11:20-12:50","13:00-14:30","14:40-16:10","16:20-17:50","18:00-19:30"};
+                    char buffer_bloques[500]; //Variable para almacenar los bloques convertidos a char
+                	    for (int c = 0; c<8; c++){ // Recorre cadena de bloques
+                        strcpy(buffer_bloques,cadena_bloques[c].c_str()); //Convierte la cadena de String a char
+                  	    worksheet_write_string(worksheet,c, 0, buffer_bloques, NULL); //Escribe los bloques en la columa 0 de la hoja
+                  	    worksheet_set_column(worksheet, c, 0, 12, NULL); //Ajustar ancho de la columna de bloques
+                	    }
 
-                         // Escribir dias del horario en cada hoja de sala
-                  	   string cadena[7] = {"Bloques","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"}; //Cadena con los dias del horario
-                  	   char buffer_cadena[500]; //Variable para almacenar los dias convertidos a char
-                  	   for (int p = 0; p<7; p++){ //Recorre cadena con los dias
-                   	       //cout << cadena[p] << endl;
-                    	       strcpy(buffer_cadena,cadena[p].c_str()); //Convierte la cadena de String a char
-                    	       worksheet_write_string(worksheet, 0, p, buffer_cadena, NULL); //Escribe los dias en la fila 0 de hoja
-                  	   }
+                       // Escribir dias del horario en cada hoja de sala
+                	   string cadena[7] = {"Bloques","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"}; //Cadena con los dias del horario
+                	   char buffer_cadena[500]; //Variable para almacenar los dias convertidos a char
+                	   for (int p = 0; p<7; p++){ //Recorre cadena con los dias
+                 	       //cout << cadena[p] << endl;
+                  	       strcpy(buffer_cadena,cadena[p].c_str()); //Convierte la cadena de String a char
+                  	       worksheet_write_string(worksheet, 0, p, buffer_cadena, NULL); //Escribe los dias en la fila 0 de hoja
+                	   }
 
 
 
-              		//Escribir bloques en el horario
-              		for(int f=0; f<7; f++){//Bloques
-              		    for(int j=0; j<6; j++){//Dias
-              		        char buffer_bloque[500];
-              		        strcpy(buffer_bloque,block[i].bloque[f][j].c_str());
-              		        worksheet_write_string(worksheet, f+1, j+1, buffer_bloque, NULL);
-              		    }
-              		}
-              	}
+            		//Escribir bloques en el horario
+            		for(int f=0; f<7; f++){//Bloques
+            		    for(int j=0; j<6; j++){//Dias
+            		        char buffer_bloque[500];
+            		        strcpy(buffer_bloque,block[i].bloque[f][j].c_str());
+            		        worksheet_write_string(worksheet, f+1, j+1, buffer_bloque, NULL);
+            		    }
+            		}
+                cout << "soy thread " << thread << "   ejecutando it"<<i <<endl;
+            	}
+
+
         }
-
-        MPI_Finalize();
         workbook_close(workbook);
 }
 

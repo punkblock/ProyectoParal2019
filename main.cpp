@@ -13,7 +13,8 @@ using namespace std;
 
 /*********************************************************/
 
-//crear estructuras
+//CREAR ESTRUCTURAS PARA OCUPAR SOLO LA INFORMACION NECESARIA DEL ARREGLO
+
 //Listo
 typedef struct InfoSala {
     char nombreEdificio[30];
@@ -49,6 +50,10 @@ typedef struct Profesor {
   int estado = 0;//0 aun quedan bloques
 } Profesor;
 
+
+/***********************FIN ESTRUCTURAS**********************************/
+
+/***********************INICIO DE FUNCIONES**********************************/
 
 Profesor profes[239];
 void infoProfe(char *argumento){
@@ -580,6 +585,8 @@ void asignarHorario(){
     std::cout << "Cantidad de RAMOS NO asignados: " <<  noCant << endl;
     //std::cout << "Cantidad de bloques asignados: " <<  cantINF << endl;
 }
+
+// FUNCION PARA ESCRITURA Y SALIDA DE ARCHIVO
 
 void crear_hojas(){
 

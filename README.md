@@ -66,5 +66,5 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
         $ mpic++ main.cpp -o tarea -lxlsxwriter -lxlnt -fopenmp
         
         Ejecutar con:
-        $ mpirun --hostfile hostfile.txt -np n ./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx
+        $ ./tarea --hostfile hostfile.txt -np n ./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx
         

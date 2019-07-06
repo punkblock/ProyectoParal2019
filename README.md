@@ -52,13 +52,14 @@ Este proyecto está construido sobre la base de estar usando Ubuntu 18.04 LTS de
         
 ### Para que ambas librerias funcionen, se tienen que combinar las carpetas xlnt y libxlsxwriter...
 
-### Compilar y Ejecutar el programa:
+### Compilar y Ejecutar el programa secuencial:
 
         Compilar con:
-        $ g++ main.cpp -o tarea -std=c++14 -lxlsxwriter -Ixlnt/include -lxlnt
+        $ g++ sec.cpp -o tarea2 -std=c++14 -lxlsxwriter -Ixlnt/include -lxlnt
         
         Ejecutar con:
-        $ ./tarea -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx
+        $ ./tarea2 -s Salas.xlsx -d Docentes.xlsx -c Cursos.xlsx
+        Compilar con:
         
 ### Compilar y Ejecutar el programa con OpenMP:
 
